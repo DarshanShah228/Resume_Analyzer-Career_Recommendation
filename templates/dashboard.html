@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard - CareerAI Intelligence
+{% endblock %}
+
+{% block content %}
+
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-light d-lg-none mr-3 border-custom" type="button" id="mobileNavToggler">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+                <h5 class="mb-0 font-weight-bold text-dark">
+                    Welcome back,
+                    <span id="dashProfileName">{{ current_user.name.split(' ')[0] }}</span>
+                    👋
+                </h5>
+                <small class="text-muted d-none d-sm-inline">
+                    Here's your career improvement overview
+                </small>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-sm btn-light border-custom rounded-circle p-2 text-muted" type="button" title="Notifications">
+                <span class="material-symbols-outlined" style="font-size: 20px;">notifications</span>
+            </button>
+
+            <div class="dropdown">
+                <button class="btn btn-sm btn-light border-custom rounded-pill px-3 py-1 d-flex align-items-center gap-2" type="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="rounded-circle bg-primary-custom text-white font-weight-bold d-flex align-items-center justify-content-center" style="width: 28px;height: 28px;font-size: 0.75rem;">
+                        <span id="topAvatarInitial">{{ current_user.name[0]|upper }}</span>
+                    </div>
+
+                    <span class="small font-weight-bold text-dark d-none d-sm-inline" id="topNavUserName">
+                        {{ current_user.name }}
+                    </span>
+
+                    <span class="material-symbols-outlined text-muted" style="font-size: 18px;">
+                        expand_more
+                    </span>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right profile-dropdown-menu" aria-labelledby="profileDropdown">
+                    <div class="px-3 py-2 border-bottom border-subtle">
+                        <span class="small font-weight-bold d-block text-dark" id="dropUserName">
+                            {{ current_user.name }}
+                        </span>
+                        <small class="text-muted d-block" id="dropUserEmail">
+                            {{ current_user.email }}
+                        </small>
+                    </div>
+
+                    <a class="dropdown-item small d-flex align-items-center py-2" href="{{ url_for('main.about') }}">
+                        <span class="material-symbols-outlined text-muted mr-2" style="font-size: 18px;">
+                            person
+                        </span>
+                        Profile & Details
+                    </a>
+
+                    <a class="dropdown-item small d-flex align-items-center py-2" href="{{ url_for('main.dashboard') }}">
+                        <span class="material-symbols-outlined text-muted mr-2" style="font-size: 18px;">
+                            settings
+                        </span>
+                        Settings
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item small d-flex align-items-center py-2 text-danger font-weight-bold" href="{{ url_for('main.logout') }}">
+                        <span class="material-symbols-outlined text-danger mr-2" style="font-size: 18px;">
+                            logout
+                        </span>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="p-3 p-sm-4 p-lg-5">
+    <div class="main-content-container">
+
+        <div class="row mb-4 gy-4">
+
+            <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
+                <div class="card-elevation-1 p-3 p-sm-4 h-100 d-flex flex-column justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="small font-weight-bold text-muted uppercase tracking-wider">
+                            ATS Score
+                        </span>
+                        <div class="bg-primary-soft text-primary-custom rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px;height: 40px;">
+                            <span class="material-symbols-outlined" style="font-size: 22px;">
+                                verified
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="h2 font-weight-extrabold text-dark mb-1">
+                            <span id="atsScore">--</span>
+                            <span class="h6 font-weight-bold text-muted">/ 100</span>
+                        </h3>
+                        <span class="badge badge-tertiary-pass text-truncate max-w-100" id="atsStatus">
+                            No Resume
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
+                <div class="card-elevation-1 p-3 p-sm-4 h-100 d-flex flex-column justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="small font-weight-bold text-muted uppercase tracking-wider">
+                            Skill Match
+                        </span>
+                        <div class="bg-tertiary-soft text-tertiary-custom rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px;height: 40px;">
+                            <span class="material-symbols-outlined" style="font-size: 22px;">
+                                psychology
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="h2 font-weight-extrabold text-dark mb-1">
+                            <span id="skillMatch">--</span>
+                        </h3>
+                        <span class="badge badge-tertiary-pass text-truncate max-w-100" id="skillMatchStatus">
+                            No Analysis
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
+                <div class="card-elevation-1 p-3 p-sm-4 h-100 d-flex flex-column justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="small font-weight-bold text-muted uppercase tracking-wider">
+                            Missing Skills
+                        </span>
+                        <div class="bg-warning-soft text-warning-custom rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px;height: 40px;">
+                            <span class="material-symbols-outlined text-warning" style="font-size: 22px;">
+                                warning
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="h2 font-weight-extrabold text-dark mb-1">
+                            <span id="missingSkills">--</span>
+                        </h3>
+                        <span class="badge badge-error-improve text-truncate max-w-100" id="missingSkillsStatus">
+                            No Analysis
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
+                <div class="card-elevation-1 p-3 p-sm-4 h-100 d-flex flex-column justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="small font-weight-bold text-muted uppercase tracking-wider">
+                            Resume Impact
+                        </span>
+                        <div class="bg-tertiary-soft text-tertiary-custom rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px;height: 40px;">
+                            <span class="material-symbols-outlined" style="font-size: 22px;">
+                                trending_up
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="h2 font-weight-extrabold text-dark mb-1" id="resumeImpact">
+                            --
+                        </h3>
+                        <span class="badge badge-tertiary-pass text-truncate max-w-100" id="resumeImpactStatus">
+                            No Analysis
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gy-4 mb-4">
+
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <div class="ai-insight-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="material-symbols-outlined fill-1 mr-2" style="font-size: 28px;color: #3525cd;">
+                                auto_awesome
+                            </span>
+                            <h5 class="h6 font-weight-extrabold text-dark mb-0">
+                                AI Career Insight
+                            </h5>
+                        </div>
+
+                        <p class="text-dark font-weight-medium mb-4" style="font-size: 1.05rem;line-height: 1.6;" id="careerInsight">
+                            Upload and analyze your resume to receive personalized career insights.
+                        </p>
+                    </div>
+
+                    <div>
+                        <a href="{{ url_for('main.ai_suggestions') }}" class="btn btn-careerai-primary btn-sm px-4 py-2 font-weight-bold">
+                            View AI Suggestions &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card-elevation-1 p-4 h-100">
+                    <h5 class="h6 font-weight-bold text-on-surface mb-3 d-flex align-items-center">
+                        <span class="material-symbols-outlined text-primary-custom mr-2">
+                            checklist
+                        </span>
+                        Recommended Next Steps
+                    </h5>
+
+                    <div class="d-flex flex-column">
+
+                        <a href="{{ url_for('main.skill_gap') }}" class="next-step-item">
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined text-primary-custom mr-2" style="font-size: 20px;">
+                                    troubleshoot
+                                </span>
+                                <span class="small font-weight-bold">
+                                    Improve Missing Skills
+                                </span>
+                            </div>
+                            <span class="material-symbols-outlined text-muted" style="font-size: 18px;">
+                                chevron_right
+                            </span>
+                        </a>
+
+                        <a href="{{ url_for('main.resume_analysis') }}" class="next-step-item">
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined text-primary-custom mr-2" style="font-size: 20px;">
+                                    analytics
+                                </span>
+                                <span class="small font-weight-bold">
+                                    Optimize Resume
+                                </span>
+                            </div>
+                            <span class="material-symbols-outlined text-muted" style="font-size: 18px;">
+                                chevron_right
+                            </span>
+                        </a>
+
+                        <a href="{{ url_for('main.compare_jd') }}" class="next-step-item mb-0">
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined text-primary-custom mr-2" style="font-size: 20px;">
+                                    compare_arrows
+                                </span>
+                                <span class="small font-weight-bold">
+                                    Compare with Job Description
+                                </span>
+                            </div>
+                            <span class="material-symbols-outlined text-muted" style="font-size: 18px;">
+                                chevron_right
+                            </span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const atsScore = document.getElementById("atsScore");
+    const atsStatus = document.getElementById("atsStatus");
+    const skillMatch = document.getElementById("skillMatch");
+    const skillMatchStatus = document.getElementById("skillMatchStatus");
+    const missingSkills = document.getElementById("missingSkills");
+    const missingSkillsStatus = document.getElementById("missingSkillsStatus");
+    const resumeImpact = document.getElementById("resumeImpact");
+    const resumeImpactStatus = document.getElementById("resumeImpactStatus");
+    const careerInsight = document.getElementById("careerInsight");
+
+    fetch("{{ url_for('api.dashboard_summary_api') }}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to load dashboard data.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.latest_score !== null && data.latest_score !== undefined) {
+                const score = Number(data.latest_score);
+                atsScore.textContent = Math.round(score);
+
+                if (score >= 80) {
+                    atsStatus.textContent = "Good Score";
+                } else if (score >= 60) {
+                    atsStatus.textContent = "Needs Improvement";
+                } else {
+                    atsStatus.textContent = "Needs Work";
+                }
+            } else {
+                atsScore.textContent = "--";
+                atsStatus.textContent = "No Resume";
+            }
+
+            if (data.skill_match !== null && data.skill_match !== undefined) {
+                const match = Number(data.skill_match);
+                skillMatch.textContent = Math.round(match) + "%";
+
+                if (match >= 80) {
+                    skillMatchStatus.textContent = "Good Match";
+                } else if (match >= 60) {
+                    skillMatchStatus.textContent = "Average Match";
+                } else {
+                    skillMatchStatus.textContent = "Needs Improvement";
+                }
+            }
+
+            if (data.missing_skills !== null && data.missing_skills !== undefined) {
+                const missing = Number(data.missing_skills);
+                missingSkills.textContent = missing;
+
+                if (missing === 0) {
+                    missingSkillsStatus.textContent = "Excellent";
+                } else if (missing <= 3) {
+                    missingSkillsStatus.textContent = "Good";
+                } else {
+                    missingSkillsStatus.textContent = "Need Improvement";
+                }
+            }
+
+            if (data.resume_impact) {
+                resumeImpact.textContent = data.resume_impact;
+                resumeImpactStatus.textContent = data.resume_impact_status || "Resume Analysis";
+            }
+
+            if (data.latest_score !== null && data.latest_score !== undefined) {
+                const score = Number(data.latest_score);
+
+                if (score >= 85) {
+                    careerInsight.textContent = "Your resume is performing strongly. Continue improving your missing skills to maximize your job match.";
+                } else if (score >= 70) {
+                    careerInsight.textContent = "Your resume has a solid foundation. Focus on missing skills and resume optimization to improve your career match.";
+                } else {
+                    careerInsight.textContent = "Your resume has room for improvement. Review the analysis and focus on the recommended skills.";
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Dashboard error:", error);
+        });
+});
+</script>
+{% endblock %}

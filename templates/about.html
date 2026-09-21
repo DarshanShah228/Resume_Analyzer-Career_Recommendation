@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block title %}About CareerAI - Smart Career Navigator{% endblock %}
+
+{% block content %}
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <div>
+            <h1 class="h4 fw-bold mb-1">About CareerAI</h1>
+            <p class="text-muted small mb-0">Resume Analysis &amp; Career Recommendation System</p>
+        </div>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary rounded-pill px-4">Back to CareerAI</a>
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="container-fluid">
+        <section class="card-elevation-1 p-4 p-md-5 mb-4 text-center">
+            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-3">ABOUT CAREERAI</span>
+            <h2 class="display-5 fw-bold mb-3">Build a Stronger Career with Smarter Resume Insights</h2>
+            <p class="lead text-muted mx-auto mb-0" style="max-width: 850px;">
+                CareerAI helps students and job seekers understand their resume strengths, identify skill gaps,
+                compare their profile with job descriptions, and receive personalized career guidance.
+            </p>
+        </section>
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="text-primary fw-semibold small">WHAT IS CAREERAI?</span>
+                    <h3 class="fw-bold mt-2 mb-3">Your Career Intelligence Assistant</h3>
+                    <p class="text-muted mb-3">
+                        CareerAI is a career-support platform designed to turn resume and job-description data
+                        into practical career insights.
+                    </p>
+                    <p class="text-muted mb-0">
+                        Instead of simply checking whether a resume is good or bad, CareerAI helps users understand
+                        what they already know, what they are missing for a target role, and what they can do next
+                        to improve their career readiness.
+                    </p>
+                </div>
+                <div class="col-lg-5">
+                    <div class="bg-light rounded-4 p-4">
+                        <h5 class="fw-bold mb-3">CareerAI focuses on</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3 fs-4">📄</span>
+                            <span>Resume understanding and analysis</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3 fs-4">🎯</span>
+                            <span>Target-role skill matching</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3 fs-4">💼</span>
+                            <span>Job-description comparison</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3 fs-4">🚀</span>
+                            <span>Actionable career recommendations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <div class="text-center mb-4">
+                <span class="text-primary fw-semibold small">CORE FEATURES</span>
+                <h3 class="fw-bold mt-2">Everything You Need to Improve Your Profile</h3>
+                <p class="text-muted mb-0">CareerAI connects resume analysis with practical career actions.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">📄</div>
+                        <h5 class="fw-bold">Resume Analyzer</h5>
+                        <p class="text-muted mb-0">Analyze your resume to understand skills, strengths, and overall profile readiness.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">🎯</div>
+                        <h5 class="fw-bold">Skill Gap Analyzer</h5>
+                        <p class="text-muted mb-0">Compare your current skills with the requirements of a selected career role.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">💼</div>
+                        <h5 class="fw-bold">JD Comparison</h5>
+                        <p class="text-muted mb-0">Compare your resume against a job description and identify matched and missing skills.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">🤖</div>
+                        <h5 class="fw-bold">AI Career Coach</h5>
+                        <p class="text-muted mb-0">Get focused career priorities, improvement actions, and guidance based on your profile.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">✍️</div>
+                        <h5 class="fw-bold">Resume Enhancer</h5>
+                        <p class="text-muted mb-0">Improve resume bullet points so your experience is clearer, stronger, and more impactful.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card-elevation-1 h-100 p-4">
+                        <div class="fs-2 mb-3">🗺️</div>
+                        <h5 class="fw-bold">Career Roadmap</h5>
+                        <p class="text-muted mb-0">Turn identified skill gaps into a practical learning and career-improvement path.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-semibold small">HOW IT WORKS</span>
+                <h3 class="fw-bold mt-2">From Resume to Career Action Plan</h3>
+                <p class="text-muted mb-0">CareerAI follows a simple process to turn your profile into useful insights.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">1</div>
+                        <h5 class="fw-bold">Upload Resume</h5>
+                        <p class="text-muted mb-0">Provide your resume so CareerAI can analyze your profile information.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">2</div>
+                        <h5 class="fw-bold">Analyze Resume</h5>
+                        <p class="text-muted mb-0">CareerAI identifies relevant skills and evaluates important resume signals.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">3</div>
+                        <h5 class="fw-bold">Select Target Role</h5>
+                        <p class="text-muted mb-0">Choose the career role you want to prepare for.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">4</div>
+                        <h5 class="fw-bold">Find Skill Gaps</h5>
+                        <p class="text-muted mb-0">See which important skills you already have and which ones need improvement.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">5</div>
+                        <h5 class="fw-bold">Compare Job Description</h5>
+                        <p class="text-muted mb-0">Check how closely your profile matches a specific job opportunity.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="text-center h-100">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:56px;height:56px;">6</div>
+                        <h5 class="fw-bold">Take Action</h5>
+                        <p class="text-muted mb-0">Use personalized recommendations and the career roadmap to improve your profile.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-5">
+                    <span class="text-primary fw-semibold small">PROJECT ARCHITECTURE</span>
+                    <h3 class="fw-bold mt-2 mb-3">How the System Works</h3>
+                    <p class="text-muted mb-0">
+                        CareerAI combines a web interface with backend analysis and recommendation components
+                        to process resume and job-related information.
+                    </p>
+                </div>
+                <div class="col-lg-7">
+                    <div class="bg-light rounded-4 p-4">
+                        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2">
+                            <span class="badge bg-white text-dark border px-3 py-2">Frontend</span>
+                            <span class="text-primary fw-bold">→</span>
+                            <span class="badge bg-white text-dark border px-3 py-2">Flask API</span>
+                            <span class="text-primary fw-bold">→</span>
+                            <span class="badge bg-white text-dark border px-3 py-2">Resume Analyzer</span>
+                            <span class="text-primary fw-bold">→</span>
+                            <span class="badge bg-white text-dark border px-3 py-2">Skill Matching</span>
+                            <span class="text-primary fw-bold">→</span>
+                            <span class="badge bg-white text-dark border px-3 py-2">Recommendation Engine</span>
+                            <span class="text-primary fw-bold">→</span>
+                            <span class="badge bg-white text-dark border px-3 py-2">Database</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="text-center mb-4">
+                <span class="text-primary fw-semibold small">TECHNOLOGY STACK</span>
+                <h3 class="fw-bold mt-2">Built with Practical Web Technologies</h3>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="bg-light rounded-4 p-4 h-100">
+                        <h5 class="fw-bold">Frontend</h5>
+                        <p class="text-muted mb-0">HTML5, CSS3, Bootstrap 4, and Vanilla JavaScript</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="bg-light rounded-4 p-4 h-100">
+                        <h5 class="fw-bold">Backend</h5>
+                        <p class="text-muted mb-0">Python and Flask for application logic and API services</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="bg-light rounded-4 p-4 h-100">
+                        <h5 class="fw-bold">Analysis</h5>
+                        <p class="text-muted mb-0">Resume parsing, ATS evaluation, skill matching, and JD analysis</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="bg-light rounded-4 p-4 h-100">
+                        <h5 class="fw-bold">Data</h5>
+                        <p class="text-muted mb-0">Role definitions and recommendation knowledge supported by structured data</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="text-primary fw-semibold small">ACADEMIC PROJECT</span>
+                    <h3 class="fw-bold mt-2 mb-3">Built as an MCA Project</h3>
+                    <p class="text-muted mb-0">
+                        CareerAI is an MCA academic project created to demonstrate the practical use of
+                        web development, resume analysis, skill matching, ATS evaluation, and career recommendation concepts.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="d-inline-flex flex-column align-items-lg-end">
+                        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">MCA</span>
+                        <span class="text-muted small">Resume Analysis and Career Recommendation System</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center py-3">
+            <h4 class="fw-bold mb-2">Ready to improve your career profile?</h4>
+            <p class="text-muted mb-3">Analyze your resume, discover your gaps, and create your next action plan.</p>
+            <a href="{{ url_for('main.home') }}" class="btn btn-primary rounded-pill px-4">Explore CareerAI →</a>
+        </section>
+    </div>
+</main>
+{% endblock %}

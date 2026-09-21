@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+{% block title %}
+Skill Gap Analysis - CareerAI Intelligence
+{% endblock %}
+{% block content %}
+<!-- =========================================================
+     TOP HEADER
+========================================================= -->
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <!-- Mobile Menu -->
+            <button
+                class="btn btn-sm btn-light d-lg-none mr-3 border-custom"
+                type="button"
+                id="mobileNavToggler">
+                <span class="material-symbols-outlined">
+                    menu
+                </span>
+            </button>
+            <div>
+                <h5 class="mb-0 font-weight-bold">
+                    Skill Gap Analysis
+                </h5>
+                <small class="text-muted d-none d-sm-inline">
+                    Compare your profile against target industry roles
+                </small>
+            </div>
+        </div>
+        <!-- Compare With JD -->
+        <div class="d-flex align-items-center gap-2">
+            <a
+                href="{{ url_for('main.compare_jd') }}"
+                class="btn btn-sm btn-careerai-primary">
+                <span
+                    class="material-symbols-outlined mr-1"
+                    style="font-size: 16px;">
+                    compare_arrows
+                </span>
+                Compare with JD
+            </a>
+        </div>
+    </div>
+</header>
+<!-- =========================================================
+     MAIN CANVAS
+========================================================= -->
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="main-content-container">
+        <!-- =====================================================
+             TARGET ROLE SELECTOR + FIT SCORE
+        ====================================================== -->
+        <div class="card-elevation-1 p-4 mb-4">
+            <div class="row align-items-center gy-3">
+                <!-- Target Role -->
+                <div
+                    class="col-md-7
+                           mb-3
+                           mb-md-0">
+                    <small
+                        class="font-weight-bold
+                               text-muted
+                               uppercase
+                               tracking-wider
+                               d-block
+                               mb-2">
+                        Target Role Selector
+                    </small>
+                    <div class="d-flex align-items-center gap-3">
+                        <select
+                            class="form-control
+                                   form-control-lg
+                                   border-custom
+                                   font-weight-bold
+                                   text-dark"
+                            id="targetRoleSelect"
+                            style="max-width: 380px;">
+                            <option
+                                value="python-dev"
+                                selected>
+                                Python Developer (91% Match)
+                            </option>
+                            <option value="backend-dev">
+                                Backend Software Engineer (86% Match)
+                            </option>
+                            <option value="fullstack-dev">
+                                Full Stack Engineer (78% Match)
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Role Fit Score -->
+                <div class="col-md-5 text-md-right">
+                    <div
+                        class="d-inline-flex
+                               align-items-center
+                               p-3
+                               bg-surface-low
+                               rounded-lg
+                               border-custom">
+                        <div class="text-left mr-3">
+                            <span
+                                class="small
+                                       font-weight-bold
+                                       text-muted
+                                       d-block">
+                                Role Fit Score
+                            </span>
+                            <strong
+                                class="h4
+                                       font-weight-bold
+                                       text-tertiary-custom
+                                       mb-0"
+                                id="roleFitScoreText">
+                                86% Fit
+                            </strong>
+                        </div>
+                        <span
+                            class="material-symbols-outlined
+                                   text-tertiary-custom"
+                            style="font-size: 36px;
+                                   line-height: 1;">
+                            verified
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- =====================================================
+             HAVE VS MISSING SKILLS
+        ====================================================== -->
+        <div class="row gy-4 mb-4">
+            <!-- Skills You Possess -->
+            <div
+                class="col-md-6
+                       mb-4
+                       mb-md-0">
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100"
+                    style="border-top: 4px solid var(--color-tertiary-container);">
+                    <div
+                        class="d-flex
+                               align-items-center
+                               justify-content-between
+                               mb-3">
+                        <h5
+                            class="h6
+                                   font-weight-bold
+                                   text-success
+                                   mb-0
+                                   d-flex
+                                   align-items-center">
+                            <span class="material-symbols-outlined mr-2">
+                                check_circle
+                            </span>
+                            Skills You Possess
+                            (<span id="haveSkillsCount">7</span>)
+                        </h5>
+                        <span class="badge badge-tertiary-pass">
+                            Verified
+                        </span>
+                    </div>
+                    <div
+                        class="skills-chip-container"
+                        id="haveSkillsContainer">
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ Python (Advanced)
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ Django / FastAPI
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ SQL & PostgreSQL
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ REST API Design
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ JavaScript (ES6+)
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ HTML5 & CSS3
+                        </span>
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-tertiary-soft">
+                            ✓ Git & GitHub
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Priority Skill Gaps -->
+            <div class="col-md-6">
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100"
+                    style="border-top: 4px solid var(--color-error);">
+                    <div
+                        class="d-flex
+                               align-items-center
+                               justify-content-between
+                               mb-3">
+                        <h5
+                            class="h6
+                                   font-weight-bold
+                                   text-danger
+                                   mb-0
+                                   d-flex
+                                   align-items-center">
+                            <span class="material-symbols-outlined mr-2">
+                                warning
+                            </span>
+                            Priority Skill Gaps
+                            (<span id="missingSkillsCount">3</span>)
+                        </h5>
+                        <span class="badge badge-error-improve">
+                            Action Needed
+                        </span>
+                    </div>
+                    <div
+                        class="d-flex
+                               flex-column
+                               gap-2"
+                        id="missingSkillsContainer">
+                        <!-- Docker -->
+                        <div
+                            class="p-2.5
+                                   bg-surface-low
+                                   rounded-lg
+                                   border-custom
+                                   d-flex
+                                   align-items-center
+                                   justify-content-between">
+                            <span
+                                class="small
+                                       font-weight-bold
+                                       text-dark
+                                       d-flex
+                                       align-items-center">
+                                <span
+                                    class="material-symbols-outlined
+                                           text-danger
+                                           mr-2"
+                                    style="font-size: 16px;">
+                                    close
+                                </span>
+                                Docker Containerization
+                            </span>
+                            <span class="badge badge-error-improve">
+                                HIGH
+                            </span>
+                        </div>
+                        <!-- AWS -->
+                        <div
+                            class="p-2.5
+                                   bg-surface-low
+                                   rounded-lg
+                                   border-custom
+                                   d-flex
+                                   align-items-center
+                                   justify-content-between">
+                            <span
+                                class="small
+                                       font-weight-bold
+                                       text-dark
+                                       d-flex
+                                       align-items-center">
+                                <span
+                                    class="material-symbols-outlined
+                                           text-warning
+                                           mr-2"
+                                    style="font-size: 16px;">
+                                    warning
+                                </span>
+                                AWS Cloud Fundamentals
+                            </span>
+                            <span class="badge badge-primary-good">
+                                MEDIUM
+                            </span>
+                        </div>
+                        <!-- Microservices -->
+                        <div
+                            class="p-2.5
+                                   bg-surface-low
+                                   rounded-lg
+                                   border-custom
+                                   d-flex
+                                   align-items-center
+                                   justify-content-between">
+                            <span
+                                class="small
+                                       font-weight-bold
+                                       text-dark
+                                       d-flex
+                                       align-items-center">
+                                <span
+                                    class="material-symbols-outlined
+                                           text-warning
+                                           mr-2"
+                                    style="font-size: 16px;">
+                                    warning
+                                </span>
+                                Microservices Architecture
+                            </span>
+                            <span class="badge badge-primary-good">
+                                MEDIUM
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- =====================================================
+             AI RECOMMENDED LEARNING TRACKS
+        ====================================================== -->
+        <div class="card-elevation-1 p-4 mb-4">
+            <h5
+                class="h6
+                       font-weight-bold
+                       text-on-surface
+                       mb-3
+                       d-flex
+                       align-items-center">
+                <span
+                    class="material-symbols-outlined
+                           text-primary-custom
+                           mr-2">
+                    school
+                </span>
+                AI Recommended Learning Tracks
+            </h5>
+                        <div class="row gy-3" id="learningTracksContainer">
+                <div class="col-12">
+                    <p class="small text-muted mb-0">Loading recommended learning tracks...</p>
+                </div>
+            </div>
+        </div>
+        <!-- =====================================================
+             BOTTOM CTA
+        ====================================================== -->
+        <div
+            class="card-elevation-2
+                   p-4
+                   p-md-5
+                   text-center
+                   bg-surface-low
+                   rounded-xl">
+            <h4
+                class="h5
+                       font-weight-bold
+                       text-on-surface
+                       mb-2">
+                Ready to Bridge Your Skill Gaps?
+            </h4>
+            <p
+                class="small
+                       text-muted
+                       mb-4
+                       mx-auto"
+                style="max-width: 520px;">
+                Use our AI Bullet Enhancer or JD Match Engine
+                to optimize your application for target roles.
+            </p>
+            <div
+                class="d-flex
+                       flex-column
+                       flex-sm-row
+                       justify-content-center
+                       align-items-center
+                       gap-3">
+                <a
+                    href="{{ url_for('main.ai_suggestions') }}"
+                    class="btn
+                           btn-careerai-primary
+                           btn-sm
+                           px-4
+                           py-2
+                           font-weight-bold">
+                    AI Bullet Enhancer &rarr;
+                </a>
+                <a
+                    href="{{ url_for('main.compare_jd') }}"
+                    class="btn
+                           btn-careerai-secondary
+                           btn-sm
+                           px-4
+                           py-2
+                           font-weight-bold">
+                    Compare with JD &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+<!-- =========================================================
+     PAGE-SPECIFIC JAVASCRIPT
+========================================================= -->
+{% block scripts %}
+    <script>
+        function renderLearningTracks(role) {
+            const container = document.getElementById('learningTracksContainer');
+            if (!container) {
+                return;
+            }
+            container.innerHTML = '';
+            const missingSkills = Array.isArray(role.missing_skills)
+                ? role.missing_skills
+                : [];
+            if (missingSkills.length === 0) {
+                container.innerHTML =
+                    '<div class="col-12">' +
+                    '<div class="p-3 bg-surface-low rounded-lg border-custom">' +
+                    '<p class="small text-success mb-0 d-flex align-items-center">' +
+                    '<span class="material-symbols-outlined mr-2" style="font-size:18px;">check_circle</span>' +
+                    'No learning tracks are required. You currently cover all required skills for this target role.' +
+                    '</p>' +
+                    '</div>' +
+                    '</div>';
+                return;
+            }
+            missingSkills.slice(0, 6).forEach(function (item, index) {
+                const priority = index === 0
+                    ? 'High Priority'
+                    : index === 1
+                        ? 'Medium Priority'
+                        : 'Recommended';
+                const badgeClass = index === 0
+                    ? 'badge-error-soft'
+                    : index === 1
+                        ? 'badge-secondary-soft'
+                        : 'badge-primary-soft';
+                const skill = item.skill || 'Skill Development';
+                const recommendation = item.recommendation ||
+                    'Build a small project using ' + skill +
+                    ' and add it to your resume with measurable impact.';
+                const col = document.createElement('div');
+                col.className = 'col-lg-4 col-md-6 col-sm-12 mb-3 mb-lg-0';
+                const card = document.createElement('div');
+                card.className =
+                    'p-3 bg-surface-low rounded-lg border-custom h-100 ' +
+                    'd-flex flex-column justify-content-between';
+                const content = document.createElement('div');
+                const badge = document.createElement('span');
+                badge.className =
+                    'badge badge-pill-custom ' + badgeClass + ' mb-2';
+                badge.textContent = priority;
+                const titleElement = document.createElement('h6');
+                titleElement.className = 'font-weight-bold text-dark mb-1';
+                titleElement.textContent = skill;
+                const descriptionElement = document.createElement('p');
+                descriptionElement.className = 'small text-muted mb-3';
+                descriptionElement.textContent = recommendation;
+                content.appendChild(badge);
+                content.appendChild(titleElement);
+                content.appendChild(descriptionElement);
+                const link = document.createElement('a');
+                link.href = "{{ url_for('main.ai_suggestions') }}";
+                link.className =
+                    'btn btn-sm btn-outline-primary font-weight-bold ' +
+                    'mt-auto align-self-start';
+                link.textContent = 'Start Learning Path →';
+                card.appendChild(content);
+                card.appendChild(link);
+                col.appendChild(card);
+                container.appendChild(col);
+            });
+        }
+        function renderSkillGap(gapData) {
+            if (!gapData || !gapData.target_role) {
+                return;
+            }
+            const role = gapData.target_role;
+            renderLearningTracks(role);
+            const roleFitScoreText = document.getElementById('roleFitScoreText');
+            if (roleFitScoreText) {
+                roleFitScoreText.textContent = role.fit_score + '% Fit';
+            }
+            const haveCount = document.getElementById('haveSkillsCount');
+            if (haveCount) {
+                haveCount.textContent = role.have_skills.length;
+            }
+            const missingCount = document.getElementById('missingSkillsCount');
+            if (missingCount) {
+                missingCount.textContent = role.missing_skills.length;
+            }
+            const haveContainer = document.getElementById('haveSkillsContainer');
+            if (haveContainer) {
+                haveContainer.innerHTML = '';
+                if (role.have_skills.length === 0) {
+                    haveContainer.innerHTML = '<span class="small text-muted">No matching skills detected yet.</span>';
+                }
+                role.have_skills.forEach(function (skill) {
+                    const span = document.createElement('span');
+                    span.className = 'badge badge-pill-custom badge-tertiary-soft';
+                    span.textContent = '\u2713 ' + skill;
+                    haveContainer.appendChild(span);
+                });
+            }
+            const missingContainer = document.getElementById('missingSkillsContainer');
+            if (missingContainer) {
+                missingContainer.innerHTML = '';
+                if (role.missing_skills.length === 0) {
+                    missingContainer.innerHTML = '<span class="small text-muted">No gaps \u2014 you cover all required skills for this role.</span>';
+                }
+                role.missing_skills.forEach(function (item, index) {
+                    const priority = index === 0 ? 'HIGH' : (index === 1 ? 'MEDIUM' : 'LOW');
+                    const iconColor = index === 0 ? 'text-danger' : 'text-warning';
+                    const row = document.createElement('div');
+                    row.className = 'p-2.5 bg-surface-low rounded-lg border-custom d-flex align-items-center justify-content-between mb-2';
+                    row.title = item.recommendation;
+                    row.innerHTML =
+                        '<span class="small font-weight-bold text-dark d-flex align-items-center">' +
+                        '<span class="material-symbols-outlined ' + iconColor + ' mr-2" style="font-size:16px;">close</span>' +
+                        item.skill +
+                        '</span>' +
+                        '<span class="badge badge-error-improve">' + priority + '</span>';
+                    missingContainer.appendChild(row);
+                });
+            }
+            // Repopulate the target-role dropdown with live match percentages
+            const roleSelect = document.getElementById('targetRoleSelect');
+            if (roleSelect && gapData.all_roles) {
+                const currentValue = role.role_id;
+                roleSelect.innerHTML = '';
+                gapData.all_roles.forEach(function (r) {
+                    const opt = document.createElement('option');
+                    opt.value = r.role_id;
+                    opt.textContent = r.title + ' (' + r.match_percentage + '% Match)';
+                    if (r.role_id === currentValue) {
+                        opt.selected = true;
+                    }
+                    roleSelect.appendChild(opt);
+                });
+            }
+        }
+        function loadSkillGap(roleId) {
+            const url = roleId ? ('/api/skill-gap?role_id=' + encodeURIComponent(roleId)) : '/api/skill-gap';
+            window.apiGet(url).then(renderSkillGap).catch(function (err) {
+                if (window.showToast) {
+                    window.showToast('Could not load skill gap', err.message, 'error');
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+        loadSkillGap();
+        const roleSelect = document.getElementById('targetRoleSelect');
+        if (!roleSelect) {
+            return;
+        }
+        roleSelect.addEventListener('change', function () {
+            loadSkillGap(this.value);
+        });
+    });
+    </script>
+{% endblock %}

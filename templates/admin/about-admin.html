@@ -1,0 +1,630 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}About CareerAI - Admin{% endblock %}
+
+{% block content %}
+
+<style>
+    .about-page {
+        min-height: 100vh;
+        background: #f5f4ef;
+    }
+
+    .about-topbar {
+        background: rgba(255,255,255,0.92);
+        border-bottom: 1px solid #dcd8cc;
+        backdrop-filter: blur(10px);
+    }
+
+    .about-container {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .about-hero {
+        position: relative;
+        overflow: hidden;
+        background: #16202b;
+        color: #f5f4ef;
+        border-radius: 10px;
+        padding: 3.25rem;
+        box-shadow: 0 12px 35px rgba(22,32,43,0.12);
+    }
+
+    .about-hero::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        right: -100px;
+        top: -120px;
+        border: 1px solid rgba(201,154,59,0.35);
+        border-radius: 50%;
+        box-shadow: 0 0 0 45px rgba(201,154,59,0.04),
+                    0 0 0 90px rgba(201,154,59,0.025);
+    }
+
+    .about-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.42rem 0.75rem;
+        border: 1px solid rgba(201,154,59,0.35);
+        border-radius: 999px;
+        color: #e2bd6c;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .about-hero h1 {
+        position: relative;
+        z-index: 1;
+        margin: 1rem 0 0.75rem;
+        max-width: 700px;
+        font-size: clamp(2rem, 4vw, 3.35rem);
+        line-height: 1.05;
+    }
+
+    .about-hero p {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        margin: 0;
+        color: rgba(245,244,239,0.7);
+        font-size: 1rem;
+        line-height: 1.75;
+    }
+
+    .hero-actions {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin-top: 1.75rem;
+    }
+
+    .hero-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.65rem 0.9rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .hero-action.primary {
+        background: #c99a3b;
+        color: #16202b;
+    }
+
+    .hero-action.secondary {
+        border: 1px solid rgba(245,244,239,0.2);
+        color: #f5f4ef;
+        background: rgba(255,255,255,0.04);
+    }
+
+    .section-heading {
+        margin-bottom: 1rem;
+    }
+
+    .section-heading .label {
+        color: #a97f2c;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+        margin: 0.25rem 0 0;
+        font-size: 1.45rem;
+    }
+
+    .section-heading p {
+        max-width: 700px;
+        margin: 0.45rem 0 0;
+        color: #68717c;
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    .about-card {
+        height: 100%;
+        background: #fff;
+        border: 1px solid #dcd8cc;
+        border-radius: 8px;
+        padding: 1.35rem;
+        box-shadow: 0 4px 15px rgba(22,32,43,0.045);
+    }
+
+    .about-card-icon {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.9rem;
+        border-radius: 7px;
+        background: rgba(201,154,59,0.12);
+        color: #a97f2c;
+    }
+
+    .about-card h3 {
+        font-family: 'Fraunces', serif;
+        font-size: 1.05rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .about-card p {
+        margin: 0;
+        color: #68717c;
+        font-size: 0.8rem;
+        line-height: 1.65;
+    }
+
+    .stack-card {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        height: 100%;
+        padding: 1rem;
+        background: #fff;
+        border: 1px solid #dcd8cc;
+        border-radius: 7px;
+    }
+
+    .stack-icon {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 38px;
+        border-radius: 6px;
+        background: #f0eee7;
+        color: #3c6e5e;
+    }
+
+    .stack-card strong {
+        display: block;
+        color: #16202b;
+        font-size: 0.82rem;
+    }
+
+    .stack-card span {
+        display: block;
+        margin-top: 0.15rem;
+        color: #8b94a0;
+        font-size: 0.7rem;
+    }
+
+    .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 0.7rem;
+    }
+
+    .flow-step {
+        flex: 1 1 150px;
+        position: relative;
+        padding: 1.1rem;
+        background: #fff;
+        border: 1px solid #dcd8cc;
+        border-radius: 7px;
+    }
+
+    .flow-number {
+        display: inline-flex;
+        width: 25px;
+        height: 25px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.65rem;
+        border-radius: 50%;
+        background: #16202b;
+        color: #f5f4ef;
+        font-size: 0.68rem;
+        font-weight: 700;
+    }
+
+    .flow-step h3 {
+        font-family: 'Fraunces', serif;
+        font-size: 0.98rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .flow-step p {
+        margin: 0;
+        color: #68717c;
+        font-size: 0.74rem;
+        line-height: 1.5;
+    }
+
+    .admin-note {
+        background: #e9eee9;
+        border-left: 4px solid #3c6e5e;
+        border-radius: 6px;
+        padding: 1.15rem 1.25rem;
+    }
+
+    .admin-note strong {
+        display: block;
+        color: #16202b;
+        font-size: 0.84rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .admin-note p {
+        margin: 0;
+        color: #56615d;
+        font-size: 0.77rem;
+        line-height: 1.6;
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .feature-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        padding: 0.62rem 0;
+        border-bottom: 1px solid #ece9e1;
+        color: #56606b;
+        font-size: 0.78rem;
+    }
+
+    .feature-list li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .feature-list .material-symbols-outlined {
+        color: #3c6e5e;
+        font-size: 17px;
+        margin-top: 1px;
+    }
+
+    .about-footer {
+        border-top: 1px solid #dcd8cc;
+        color: #8b94a0;
+        font-size: 0.72rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .about-hero {
+            padding: 2rem 1.35rem;
+        }
+    }
+</style>
+
+<div class="about-page">
+
+    <header class="about-topbar py-3 px-3 px-md-4 sticky-top">
+        <div class="about-container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-light d-lg-none mr-3 border"
+                        type="button" id="mobileNavToggler">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div>
+                    <div class="font-weight-bold" style="color:#16202b;">
+                        About CareerAI
+                    </div>
+                    <small class="text-muted d-none d-sm-inline">
+                        Project overview & system architecture
+                    </small>
+                </div>
+            </div>
+
+            <a href="{{ url_for('main.admin') }}"
+               class="btn btn-sm"
+               style="background:#16202b;color:#f5f4ef;">
+                <span class="material-symbols-outlined mr-1" style="font-size:16px;">manage_accounts</span>
+                User Management
+            </a>
+        </div>
+    </header>
+
+    <main class="px-3 px-md-4 py-4 py-lg-5">
+        <div class="about-container">
+
+            <section class="about-hero mb-5">
+                <div class="about-eyebrow">
+                    <span class="material-symbols-outlined" style="font-size:16px;">school</span>
+                    MCA Academic Project
+                </div>
+
+                <h1>CareerAI — Intelligent Career Navigation</h1>
+
+                <p>
+                    CareerAI helps candidates understand their resume strength,
+                    identify missing skills, compare their profile with job
+                    descriptions, and receive practical career recommendations
+                    from one centralized platform.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{{ url_for('main.admin') }}" class="hero-action primary">
+                        <span class="material-symbols-outlined" style="font-size:17px;">dashboard</span>
+                        Admin Dashboard
+                    </a>
+                    <a href="{{ url_for('main.admin') }}" class="hero-action secondary">
+                        <span class="material-symbols-outlined" style="font-size:17px;">group</span>
+                        Manage Users
+                    </a>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <div class="section-heading">
+                    <div class="label">What CareerAI Does</div>
+                    <h2>From resume upload to career action</h2>
+                    <p>
+                        The platform turns resume and job-description data into
+                        understandable scores, skill insights, and next-step recommendations.
+                    </p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="about-card">
+                            <div class="about-card-icon">
+                                <span class="material-symbols-outlined">description</span>
+                            </div>
+                            <h3>Resume Analysis</h3>
+                            <p>
+                                Extracts resume information and evaluates the profile
+                                using structured analysis criteria.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="about-card">
+                            <div class="about-card-icon">
+                                <span class="material-symbols-outlined">troubleshoot</span>
+                            </div>
+                            <h3>Skill Gap</h3>
+                            <p>
+                                Compares existing skills with target-role requirements
+                                and highlights priority areas to improve.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="about-card">
+                            <div class="about-card-icon">
+                                <span class="material-symbols-outlined">compare_arrows</span>
+                            </div>
+                            <h3>JD Matching</h3>
+                            <p>
+                                Compares a resume with a target job description and
+                                identifies matched and missing skills.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="about-card">
+                            <div class="about-card-icon">
+                                <span class="material-symbols-outlined">route</span>
+                            </div>
+                            <h3>Career Guidance</h3>
+                            <p>
+                                Converts analysis results into practical recommendations
+                                and improvement priorities.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <div class="section-heading">
+                    <div class="label">Technology Stack</div>
+                    <h2>Built as a full-stack web application</h2>
+                    <p>
+                        CareerAI uses a Python backend, a relational SQLite database,
+                        and a responsive browser-based interface.
+                    </p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">code</span>
+                            </div>
+                            <div>
+                                <strong>Python + Flask</strong>
+                                <span>Application backend & routing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">storage</span>
+                            </div>
+                            <div>
+                                <strong>SQLite + SQLAlchemy</strong>
+                                <span>Persistent relational data storage</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">web</span>
+                            </div>
+                            <div>
+                                <strong>HTML5 + CSS3</strong>
+                                <span>Responsive page structure & styling</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">javascript</span>
+                            </div>
+                            <div>
+                                <strong>Vanilla JavaScript</strong>
+                                <span>Frontend interaction & API communication</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">grid_view</span>
+                            </div>
+                            <div>
+                                <strong>Bootstrap 4.6</strong>
+                                <span>Responsive layout & UI components</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="stack-card">
+                            <div class="stack-icon">
+                                <span class="material-symbols-outlined">api</span>
+                            </div>
+                            <div>
+                                <strong>REST API</strong>
+                                <span>Frontend ↔ Flask ↔ database communication</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <div class="section-heading">
+                    <div class="label">System Architecture</div>
+                    <h2>How the application works</h2>
+                </div>
+
+                <div class="flow">
+                    <div class="flow-step">
+                        <span class="flow-number">01</span>
+                        <h3>User</h3>
+                        <p>Uploads a resume or provides a target job description.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <span class="flow-number">02</span>
+                        <h3>Flask API</h3>
+                        <p>Receives requests, validates data, and coordinates processing.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <span class="flow-number">03</span>
+                        <h3>Analysis Engine</h3>
+                        <p>Extracts information and calculates resume or matching insights.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <span class="flow-number">04</span>
+                        <h3>SQLite</h3>
+                        <p>Stores users, resumes, analyses, skill gaps, comparisons, and recommendations.</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <span class="flow-number">05</span>
+                        <h3>Career Insights</h3>
+                        <p>Displays scores, gaps, matches, and recommended next actions.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="row mb-5">
+                <div class="col-lg-7 mb-3 mb-lg-0">
+                    <div class="about-card">
+                        <div class="section-heading mb-2">
+                            <div class="label">Core Modules</div>
+                            <h2>Platform capabilities</h2>
+                        </div>
+
+                        <ul class="feature-list">
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>User authentication and role-based admin access</span>
+                            </li>
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>Resume upload and extracted-text processing</span>
+                            </li>
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>Resume scoring and structured analysis</span>
+                            </li>
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>Target-role skill-gap identification</span>
+                            </li>
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>Job-description comparison with matched and missing skills</span>
+                            </li>
+                            <li>
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span>Career recommendations and bullet-point enhancement</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="admin-note h-100">
+                        <strong>
+                            <span class="material-symbols-outlined mr-1" style="font-size:17px;vertical-align:-4px;">database</span>
+                            Database-driven architecture
+                        </strong>
+                        <p>
+                            CareerAI uses SQLite as persistent storage. The browser
+                            communicates with Flask APIs, Flask uses SQLAlchemy for
+                            database operations, and the application reads and writes
+                            the stored records through the backend.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-card mb-5">
+                <div class="section-heading mb-0">
+                    <div class="label">Project Purpose</div>
+                    <h2>Designed for practical career preparation</h2>
+                    <p>
+                        CareerAI brings several resume and job-readiness activities
+                        into one workflow so a candidate can move from understanding
+                        their current profile to identifying concrete improvement areas.
+                    </p>
+                </div>
+            </section>
+
+            <footer class="about-footer py-4 text-center">
+                CareerAI &nbsp;•&nbsp; MCA Academic Project &nbsp;•&nbsp; Admin Information
+            </footer>
+
+        </div>
+    </main>
+</div>
+
+{% endblock %}

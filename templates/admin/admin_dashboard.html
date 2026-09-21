@@ -1,0 +1,778 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Admin Dashboard - CareerAI{% endblock %}
+
+{% block content %}
+
+<style>
+    .admin-dashboard {
+        min-height: 100vh;
+        background: #f5f4ef;
+    }
+
+    .dashboard-header {
+        background: #fff;
+        border-bottom: 1px solid #dcd8cc;
+    }
+
+    .dashboard-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .dashboard-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.8rem;
+        color: #16202b;
+        margin: 0;
+    }
+
+    .dashboard-subtitle {
+        color: #8b94a0;
+        font-size: .78rem;
+        margin-top: .3rem;
+    }
+
+    .refresh-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        border: 1px solid #dcd8cc;
+        background: #fff;
+        color: #16202b;
+        border-radius: 5px;
+        padding: .55rem .75rem;
+        font-size: .76rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .refresh-btn:hover {
+        background: #f5f4ef;
+    }
+
+    .stat-card {
+        background: #fff;
+        border: 1px solid #dcd8cc;
+        border-radius: 8px;
+        padding: 1.15rem;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(22,32,43,.04);
+    }
+
+    .stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: .75rem;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        background: rgba(201,154,59,.12);
+        color: #a97f2c;
+    }
+
+    .stat-label {
+        color: #8b94a0;
+        font-size: .7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+
+    .stat-value {
+        color: #16202b;
+        font-family: 'Fraunces', serif;
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    .stat-meta {
+        color: #8b94a0;
+        font-size: .7rem;
+        margin-top: .45rem;
+    }
+
+    .dashboard-card {
+        background: #fff;
+        border: 1px solid #dcd8cc;
+        border-radius: 8px;
+        padding: 1.25rem;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(22,32,43,.04);
+    }
+
+    .card-title {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        color: #16202b;
+        font-family: 'Fraunces', serif;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+
+    .card-title .material-symbols-outlined {
+        color: #a97f2c;
+        font-size: 19px;
+    }
+
+    .card-subtitle {
+        color: #8b94a0;
+        font-size: .7rem;
+        margin: .3rem 0 1rem;
+    }
+
+    .metric-row {
+        margin-bottom: .8rem;
+    }
+
+    .metric-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .metric-label-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: .3rem;
+        font-size: .73rem;
+    }
+
+    .metric-label {
+        color: #56606b;
+    }
+
+    .metric-number {
+        color: #16202b;
+        font-weight: 700;
+    }
+
+    .progress-track {
+        height: 7px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: #eceae2;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0;
+        border-radius: inherit;
+        background: #3c6e5e;
+        transition: width .35s ease;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .activity-item {
+        display: flex;
+        gap: .75rem;
+        padding: .75rem 0;
+        border-bottom: 1px solid #ece9e1;
+    }
+
+    .activity-item:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #f0eee7;
+        color: #3c6e5e;
+    }
+
+    .activity-text {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .activity-title {
+        color: #16202b;
+        font-size: .76rem;
+        font-weight: 600;
+    }
+
+    .activity-meta {
+        color: #8b94a0;
+        font-size: .67rem;
+        margin-top: .15rem;
+    }
+
+    .empty-state {
+        padding: 1.8rem .5rem;
+        text-align: center;
+        color: #8b94a0;
+        font-size: .75rem;
+    }
+
+    .system-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: .6rem;
+    }
+
+    .system-item {
+        padding: .8rem;
+        border: 1px solid #ece9e1;
+        border-radius: 6px;
+        background: #faf9f5;
+    }
+
+    .system-item strong {
+        display: block;
+        color: #16202b;
+        font-size: .78rem;
+    }
+
+    .system-item span {
+        display: block;
+        color: #8b94a0;
+        font-size: .67rem;
+        margin-top: .2rem;
+    }
+
+    .loading {
+        opacity: .55;
+        pointer-events: none;
+    }
+
+    .dashboard-alert {
+        display: none;
+        background: rgba(179,72,63,.08);
+        border: 1px solid rgba(179,72,63,.2);
+        color: #b3483f;
+        border-radius: 5px;
+        padding: .7rem .85rem;
+        font-size: .75rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 575.98px) {
+        .dashboard-title {
+            font-size: 1.45rem;
+        }
+
+        .system-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-dashboard">
+    <header class="dashboard-header py-3 px-3 px-md-4">
+        <div class="dashboard-container d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-light d-lg-none mr-3 border"
+                        type="button"
+                        id="mobileNavToggler">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+
+                <div>
+                    <h1 class="dashboard-title">Admin Dashboard</h1>
+                    <div class="dashboard-subtitle d-none d-sm-block">
+                        CareerAI system overview and platform analytics
+                    </div>
+                </div>
+            </div>
+
+            <button class="refresh-btn" id="refreshDashboard">
+                <span class="material-symbols-outlined" style="font-size:17px;">refresh</span>
+                Refresh
+            </button>
+        </div>
+    </header>
+
+    <main class="px-3 px-md-4 py-4">
+        <div class="dashboard-container">
+
+            <div id="dashboardAlert" class="dashboard-alert"></div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-sm-6 col-xl-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Users</span>
+                            <span class="stat-icon material-symbols-outlined">group</span>
+                        </div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-meta" id="userBreakdown">
+                            0 admins · 0 candidates
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Resumes</span>
+                            <span class="stat-icon material-symbols-outlined">description</span>
+                        </div>
+                        <div class="stat-value" id="totalResumes">0</div>
+                        <div class="stat-meta" id="resumeMeta">
+                            0 analyzed
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">JD Comparisons</span>
+                            <span class="stat-icon material-symbols-outlined">compare_arrows</span>
+                        </div>
+                        <div class="stat-value" id="totalComparisons">0</div>
+                        <div class="stat-meta" id="jdMeta">
+                            0 job descriptions
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Recommendations</span>
+                            <span class="stat-icon material-symbols-outlined">route</span>
+                        </div>
+                        <div class="stat-value" id="totalRecommendations">0</div>
+                        <div class="stat-meta" id="recommendationMeta">
+                            Career recommendations
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-lg-7 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">analytics</span>
+                            Platform Overview
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Current records stored in the CareerAI database
+                        </p>
+
+                        <div id="overviewMetrics"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">troubleshoot</span>
+                            Common Skill Gaps
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Skills most frequently identified as missing
+                        </p>
+
+                        <div id="skillGaps"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-lg-7 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">work</span>
+                            Career Recommendations
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Most frequently recommended career paths
+                        </p>
+
+                        <div id="careerRecommendations"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">schedule</span>
+                            Recent Activity
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Latest records created across the system
+                        </p>
+
+                        <div class="activity-list" id="recentActivity"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            User Growth
+                        </h2>
+
+                        <p class="card-subtitle">
+                            New registrations during the last 7 days
+                        </p>
+
+                        <div id="userGrowth"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-3">
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined">database</span>
+                            System Records
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Database entity counts
+                        </p>
+
+                        <div class="system-grid" id="systemRecords"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+(function() {
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+        if (!value) {
+            return "Unknown date";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "Unknown date";
+        }
+
+        return date.toLocaleString([], {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function renderEmpty(container, message) {
+        container.innerHTML =
+            '<div class="empty-state">' +
+            escapeHtml(message) +
+            '</div>';
+    }
+
+    function renderMetrics(data) {
+        const items = [
+            ["Registered Users", data.total_users],
+            ["Uploaded Resumes", data.total_resumes],
+            ["Resume Analyses", data.total_analyses],
+            ["Skill Gap Records", data.total_skill_gaps],
+            ["Job Descriptions", data.total_job_descriptions],
+            ["JD Comparisons", data.total_comparisons],
+            ["Career Recommendations", data.total_recommendations]
+        ];
+
+        const max = Math.max(
+            ...items.map(item => Number(item[1]) || 0),
+            1
+        );
+
+        $("overviewMetrics").innerHTML = items.map(item => {
+            const value = Number(item[1]) || 0;
+
+            return `
+                <div class="metric-row">
+                    <div class="metric-label-row">
+                        <span class="metric-label">
+                            ${escapeHtml(item[0])}
+                        </span>
+                        <span class="metric-number">
+                            ${value}
+                        </span>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill"
+                             style="width:${Math.min((value / max) * 100, 100)}%">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderRankedList(container, items, emptyMessage) {
+        if (!items || !items.length) {
+            renderEmpty(container, emptyMessage);
+            return;
+        }
+
+        const max = Math.max(
+            ...items.map(item => Number(item.count) || 0),
+            1
+        );
+
+        container.innerHTML = items.slice(0, 6).map(item => {
+            const count = Number(item.count) || 0;
+
+            return `
+                <div class="metric-row">
+                    <div class="metric-label-row">
+                        <span class="metric-label">
+                            ${escapeHtml(item.name)}
+                        </span>
+
+                        <span class="metric-number">
+                            ${count}
+                        </span>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill"
+                             style="width:${Math.min((count / max) * 100, 100)}%">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderActivity(items) {
+        if (!items || !items.length) {
+            renderEmpty(
+                $("recentActivity"),
+                "No recent activity found."
+            );
+            return;
+        }
+
+        $("recentActivity").innerHTML = items.slice(0, 8).map(item => `
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <span class="material-symbols-outlined"
+                          style="font-size:17px;">
+                        ${escapeHtml(item.icon)}
+                    </span>
+                </div>
+
+                <div class="activity-text">
+                    <div class="activity-title">
+                        ${escapeHtml(item.title)}
+                    </div>
+
+                    <div class="activity-meta">
+                        ${escapeHtml(item.subtitle)}
+                        ·
+                        ${escapeHtml(formatDate(item.created_at))}
+                    </div>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function renderGrowth(items) {
+        if (!items || !items.length) {
+            renderEmpty(
+                $("userGrowth"),
+                "No registration data available."
+            );
+            return;
+        }
+
+        const max = Math.max(
+            ...items.map(item => Number(item.count) || 0),
+            1
+        );
+
+        $("userGrowth").innerHTML = items.map(item => {
+            const count = Number(item.count) || 0;
+
+            return `
+                <div class="metric-row">
+                    <div class="metric-label-row">
+                        <span class="metric-label">
+                            ${escapeHtml(item.date)}
+                        </span>
+
+                        <span class="metric-number">
+                            ${count} user${count === 1 ? "" : "s"}
+                        </span>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill"
+                             style="width:${Math.min((count / max) * 100, 100)}%">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderSystemRecords(data) {
+        const records = [
+            ["Users", data.total_users],
+            ["Resumes", data.total_resumes],
+            ["Analyses", data.total_analyses],
+            ["Skill Gaps", data.total_skill_gaps],
+            ["JDs", data.total_job_descriptions],
+            ["Comparisons", data.total_comparisons],
+            ["Recommendations", data.total_recommendations]
+        ];
+
+        $("systemRecords").innerHTML = records.map(item => `
+            <div class="system-item">
+                <strong>
+                    ${Number(item[1]) || 0}
+                </strong>
+
+                <span>
+                    ${escapeHtml(item[0])}
+                </span>
+            </div>
+        `).join("");
+    }
+
+    async function loadDashboard() {
+        const page = document.querySelector(".admin-dashboard");
+        const alert = $("dashboardAlert");
+
+        page.classList.add("loading");
+        alert.style.display = "none";
+
+        try {
+            const response = await fetch(
+                "/api/admin/dashboard",
+                {
+                    method: "GET",
+                    credentials: "same-origin",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Unable to load dashboard data."
+                );
+            }
+
+            $("totalUsers").textContent =
+                data.stats.total_users;
+
+            $("userBreakdown").textContent =
+                `${data.stats.admin_users} admins · ${data.stats.regular_users} candidates`;
+
+            $("totalResumes").textContent =
+                data.stats.total_resumes;
+
+            $("resumeMeta").textContent =
+                `${data.stats.total_analyses} analyzed`;
+
+            $("totalComparisons").textContent =
+                data.stats.total_comparisons;
+
+            $("jdMeta").textContent =
+                `${data.stats.total_job_descriptions} job descriptions`;
+
+            $("totalRecommendations").textContent =
+                data.stats.total_recommendations;
+
+            $("recommendationMeta").textContent =
+                `${data.stats.total_skill_gaps} skill-gap records`;
+
+            renderMetrics(data.stats);
+
+            renderRankedList(
+                $("skillGaps"),
+                data.skill_gaps,
+                "No skill-gap data found."
+            );
+
+            renderRankedList(
+                $("careerRecommendations"),
+                data.career_recommendations,
+                "No recommendation data found."
+            );
+
+            renderActivity(data.recent_activity);
+
+            renderGrowth(data.user_growth);
+
+            renderSystemRecords(data.stats);
+
+        } catch (error) {
+            alert.textContent =
+                error.message ||
+                "Unable to load dashboard.";
+
+            alert.style.display = "block";
+
+        } finally {
+            page.classList.remove("loading");
+        }
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+            loadDashboard();
+        }
+    );
+
+    $("refreshDashboard").addEventListener(
+        "click",
+        loadDashboard
+    );
+
+})();
+</script>
+
+{% endblock %}

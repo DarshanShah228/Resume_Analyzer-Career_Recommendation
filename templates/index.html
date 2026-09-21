@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+{% block title %}CareerAI - Dashboard{% endblock %}
+
+{% block content %}
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="h4 fw-bold mb-1">Career Dashboard</h1>
+                <p class="text-muted small mb-0">Your resume, skills, job matches, and next career actions.</p>
+            </div>
+            <a href="{{ url_for('main.about') }}" class="btn btn-outline-primary rounded-pill px-4">About CareerAI</a>
+        </div>
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="container-fluid">
+        <section class="card-elevation-1 p-4 p-md-5 mb-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="badge badge-pill-custom badge-primary-soft mb-3">CAREER OVERVIEW</span>
+                    <h2 class="display-6 fw-bold mb-2">Welcome back, {{ current_user.name or current_user.username }} 👋</h2>
+                    <p class="text-muted mb-0">Track your career readiness and focus on the improvements that matter most.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-2">
+                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary">Analyze Resume →</a>
+                        <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-secondary">Compare JD</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="dashboardAlert" class="alert d-none mb-4"></div>
+
+        <section class="row g-4 mb-4">
+            <div class="col-md-6 col-xl-3">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="small text-muted">Career Readiness</span>
+                            <h3 id="readinessScore" class="display-6 fw-bold mb-0 mt-2">—</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-primary-custom" style="font-size:32px;">speed</span>
+                    </div>
+                    <small id="readinessLabel" class="text-muted d-block mt-2">Upload a resume to calculate</small>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="small text-muted">Resume Score</span>
+                            <h3 id="resumeScore" class="display-6 fw-bold mb-0 mt-2">—</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-success" style="font-size:32px;">description</span>
+                    </div>
+                    <small id="resumeScoreLabel" class="text-muted d-block mt-2">No resume analyzed yet</small>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="small text-muted">Best Role Match</span>
+                            <h3 id="bestRole" class="h4 fw-bold mb-0 mt-3">—</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-secondary-custom" style="font-size:32px;">work</span>
+                    </div>
+                    <small id="bestRoleScore" class="text-muted d-block mt-2">Analyze your resume first</small>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="small text-muted">Skills Detected</span>
+                            <h3 id="skillsCount" class="display-6 fw-bold mb-0 mt-2">—</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-info" style="font-size:32px;">psychology</span>
+                    </div>
+                    <small class="text-muted d-block mt-2">From your latest resume</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div>
+                            <span class="text-primary fw-semibold small">RESUME STATUS</span>
+                            <h3 class="h4 fw-bold mt-1 mb-0">Your Latest Resume</h3>
+                        </div>
+                        <span id="resumeStatusBadge" class="badge badge-pill-custom badge-secondary-soft">Checking...</span>
+                    </div>
+                    <div class="bg-light rounded-4 p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-3 bg-primary-subtle text-primary p-3 me-3">
+                                <span class="material-symbols-outlined">description</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 id="resumeFilename" class="fw-bold mb-1">No resume found</h5>
+                                <p id="resumeMeta" class="small text-muted mb-0">Upload a resume to begin your CareerAI analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary">Upload / Replace Resume</a>
+                        <a href="{{ url_for('main.resume_analysis') }}" class="btn btn-outline-primary">View Analysis</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card-elevation-1 p-4 h-100">
+                    <span class="text-primary fw-semibold small">TARGET CAREER</span>
+                    <h3 id="targetRoleTitle" class="h4 fw-bold mt-1 mb-3">Choose a target role</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-muted">Role Fit</span>
+                        <strong id="roleFitScore">—</strong>
+                    </div>
+                    <div class="progress mb-4" style="height:8px;">
+                        <div id="roleFitBar" class="progress-bar bg-primary-custom" style="width:0%;"></div>
+                    </div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <div id="haveSkillsCount" class="h4 fw-bold mb-1">—</div>
+                                <small class="text-muted">Skills You Have</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <div id="gapSkillsCount" class="h4 fw-bold mb-1">—</div>
+                                <small class="text-muted">Skill Gaps</small>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('main.skill_gap') }}" class="btn btn-outline-primary w-100">View Skill Gap →</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div>
+                            <span class="text-primary fw-semibold small">JOB MATCH</span>
+                            <h3 class="h4 fw-bold mt-1 mb-0">Latest JD Comparison</h3>
+                        </div>
+                        <span class="material-symbols-outlined text-primary-custom" style="font-size:30px;">compare_arrows</span>
+                    </div>
+                    <div id="jdEmptyState" class="text-center py-4">
+                        <span class="material-symbols-outlined text-muted" style="font-size:42px;">work_outline</span>
+                        <p class="text-muted mt-2 mb-3">No job description has been compared yet.</p>
+                        <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-primary">Compare a Job Description</a>
+                    </div>
+                    <div id="jdContent" class="d-none">
+                        <div class="bg-light rounded-4 p-4 mb-3">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                <div>
+                                    <span class="small text-muted">Target Position</span>
+                                    <h4 id="jdTitle" class="h5 fw-bold mt-1 mb-0">—</h4>
+                                </div>
+                                <div class="text-end">
+                                    <span id="jdScore" class="h3 fw-bold text-primary-custom">—</span>
+                                    <small class="d-block text-muted">Match</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="border rounded-3 p-3">
+                                    <small class="text-muted d-block">Matched Skills</small>
+                                    <strong id="jdMatched" class="h5">—</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded-3 p-3">
+                                    <small class="text-muted d-block">Missing Skills</small>
+                                    <strong id="jdMissing" class="h5">—</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('main.jd_results') }}" class="btn btn-outline-primary">View Comparison Results →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card-elevation-1 p-4 h-100">
+                    <span class="text-primary fw-semibold small">AI CAREER COACH</span>
+                    <h3 class="h4 fw-bold mt-1 mb-3">Your Next Priorities</h3>
+                    <div id="priorityList">
+                        <div class="text-muted small py-3">Loading your career priorities...</div>
+                    </div>
+                    <a href="{{ url_for('main.ai_suggestions') }}" class="btn btn-careerai-primary w-100 mt-3">Open AI Career Coach →</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <div class="text-center mb-4">
+                <span class="text-primary fw-semibold small">QUICK ACTIONS</span>
+                <h3 class="h4 fw-bold mt-1">Continue Your Career Journey</h3>
+            </div>
+            <div class="row g-3">
+                <div class="col-6 col-lg-3">
+                    <a href="{{ url_for('main.upload_resume') }}" class="card-elevation-1 p-3 p-md-4 h-100 text-decoration-none d-block">
+                        <span class="material-symbols-outlined text-primary-custom mb-2" style="font-size:30px;">upload_file</span>
+                        <h5 class="fw-bold text-dark mb-1">Upload Resume</h5>
+                        <small class="text-muted">Start or update your profile</small>
+                    </a>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <a href="{{ url_for('main.resume_analysis') }}" class="card-elevation-1 p-3 p-md-4 h-100 text-decoration-none d-block">
+                        <span class="material-symbols-outlined text-success mb-2" style="font-size:30px;">analytics</span>
+                        <h5 class="fw-bold text-dark mb-1">Resume Analysis</h5>
+                        <small class="text-muted">Review your resume insights</small>
+                    </a>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <a href="{{ url_for('main.skill_gap') }}" class="card-elevation-1 p-3 p-md-4 h-100 text-decoration-none d-block">
+                        <span class="material-symbols-outlined text-danger mb-2" style="font-size:30px;">target</span>
+                        <h5 class="fw-bold text-dark mb-1">Skill Gap</h5>
+                        <small class="text-muted">Find skills to improve</small>
+                    </a>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <a href="{{ url_for('main.ai_suggestions') }}" class="card-elevation-1 p-3 p-md-4 h-100 text-decoration-none d-block">
+                        <span class="material-symbols-outlined text-secondary-custom mb-2" style="font-size:30px;">auto_awesome</span>
+                        <h5 class="fw-bold text-dark mb-1">AI Career Coach</h5>
+                        <small class="text-muted">Get your next action plan</small>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const alertBox = document.getElementById("dashboardAlert");
+    const safeNumber = value => {
+        const number = Number(value);
+        return Number.isFinite(number) ? Math.round(number) : null;
+    };
+    const firstValue = (obj, keys, fallback = null) => {
+        for (const key of keys) {
+            if (obj && obj[key] !== undefined && obj[key] !== null) return obj[key];
+        }
+        return fallback;
+    };
+    const showAlert = (message, type = "warning") => {
+        alertBox.className = `alert alert-${type} mb-4`;
+        alertBox.textContent = message;
+    };
+    const hideAlert = () => {
+        alertBox.className = "alert d-none mb-4";
+        alertBox.textContent = "";
+    };
+    const setScore = (elementId, value, suffix = "") => {
+        const element = document.getElementById(elementId);
+        const number = safeNumber(value);
+        element.textContent = number === null ? "—" : `${number}${suffix}`;
+        return number;
+    };
+    const getArray = value => Array.isArray(value) ? value : [];
+    const getResume = data => data && (data.resume || data.latest_resume || data.data || data);
+
+    async function loadResume() {
+        try {
+            const response = await window.apiGet("/api/resume/latest");
+            const data = getResume(response);
+            if (!data || response?.error) {
+                document.getElementById("resumeStatusBadge").textContent = "Not uploaded";
+                return null;
+            }
+            const filename = firstValue(data, ["filename", "original_filename", "resume_filename"], "Latest Resume");
+            const skills = firstValue(data, ["flat_skills", "skills"], []);
+            const score = firstValue(data, ["resume_score", "score", "ats_score", "overall_score"], null);
+            document.getElementById("resumeFilename").textContent = filename;
+            document.getElementById("resumeMeta").textContent = "Your latest resume is available for CareerAI analysis.";
+            document.getElementById("resumeStatusBadge").textContent = "Available";
+            document.getElementById("resumeStatusBadge").className = "badge badge-pill-custom badge-tertiary-soft";
+            setScore("resumeScore", score);
+            document.getElementById("resumeScoreLabel").textContent = score !== null ? "Latest resume evaluation" : "Analysis available";
+            document.getElementById("skillsCount").textContent = getArray(skills).length || "—";
+            return data;
+        } catch (error) {
+            document.getElementById("resumeStatusBadge").textContent = "Unavailable";
+            return null;
+        }
+    }
+
+    async function loadRoles() {
+        try {
+            const response = await window.apiGet("/api/roles");
+            return getArray(response?.roles || response?.data || response);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async function loadSkillGap(resume) {
+        const roles = await loadRoles();
+        if (!roles.length || !resume) return;
+        let selected = roles[0];
+        const resumeSkills = getArray(firstValue(resume, ["flat_skills", "skills"], []));
+        let bestScore = -1;
+        roles.forEach(role => {
+            const required = getArray(role.required_skills);
+            if (!required.length) return;
+            const have = new Set(resumeSkills.map(skill => String(skill).toLowerCase()));
+            const matched = required.filter(skill => have.has(String(skill).toLowerCase())).length;
+            const score = Math.round((matched / required.length) * 100);
+            if (score > bestScore) {
+                bestScore = score;
+                selected = role;
+            }
+        });
+        try {
+            const roleId = selected.role_id || selected.id;
+            const response = await window.apiGet(`/api/skill-gap?role_id=${encodeURIComponent(roleId)}`);
+            const data = response?.role || response?.data || response;
+            const fit = safeNumber(firstValue(data, ["role_fit_score", "match_score", "score"], bestScore));
+            const have = getArray(firstValue(data, ["skills_have", "matched_skills", "have_skills"], []));
+            const missing = getArray(firstValue(data, ["missing_skills", "skills_missing"], []));
+            document.getElementById("targetRoleTitle").textContent = firstValue(data, ["title", "role_title"], selected.title || "Target Role");
+            setScore("roleFitScore", fit, "%");
+            document.getElementById("roleFitBar").style.width = `${fit || 0}%`;
+            document.getElementById("haveSkillsCount").textContent = have.length || "0";
+            document.getElementById("gapSkillsCount").textContent = missing.length || "0";
+            setScore("readinessScore", fit);
+            document.getElementById("readinessLabel").textContent = fit !== null ? "Based on your current role fit" : "Role fit unavailable";
+            document.getElementById("bestRole").textContent = selected.title || "—";
+            document.getElementById("bestRoleScore").textContent = fit !== null ? `${fit}% role fit` : "Role fit unavailable";
+            renderPriorities(missing);
+        } catch (error) {
+            document.getElementById("targetRoleTitle").textContent = selected.title || "Target Role";
+            renderPriorities([]);
+        }
+    }
+
+    async function loadJDResults() {
+        try {
+            const response = await window.apiGet("/api/jd-results/latest");
+            const data = response?.comparison || response?.data || response;
+            if (!data || response?.error || !data.comparison_id) return;
+            document.getElementById("jdEmptyState").classList.add("d-none");
+            document.getElementById("jdContent").classList.remove("d-none");
+            document.getElementById("jdTitle").textContent = firstValue(data, ["job_title", "target_job_title"], "Latest Job");
+            const score = setScore("jdScore", firstValue(data, ["match_score", "score"], null), "%");
+            document.getElementById("jdMatched").textContent = getArray(data.matched_skills).length;
+            document.getElementById("jdMissing").textContent = getArray(data.missing_skills).length;
+            if (score === null) document.getElementById("jdScore").textContent = "—";
+        } catch (error) {
+        }
+    }
+
+    function renderPriorities(missingSkills) {
+        const list = document.getElementById("priorityList");
+        const skills = getArray(missingSkills).slice(0, 3);
+        if (!skills.length) {
+            list.innerHTML = `<div class="bg-light rounded-3 p-3 small text-muted">Upload and analyze your resume to receive personalized skill priorities.</div>`;
+            return;
+        }
+        list.innerHTML = skills.map((skill, index) => `
+            <div class="d-flex align-items-start mb-3">
+                <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3" style="width:32px;height:32px;min-width:32px;">${index + 1}</div>
+                <div>
+                    <strong class="d-block">${escapeHtml(typeof skill === "object" ? skill.skill || skill.name || "Skill" : skill)}</strong>
+                    <small class="text-muted">${index === 0 ? "High priority improvement" : "Recommended improvement"}</small>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    async function initDashboard() {
+        hideAlert();
+        const resume = await loadResume();
+        if (!resume) {
+            renderPriorities([]);
+            await loadJDResults();
+            return;
+        }
+        await Promise.all([loadSkillGap(resume), loadJDResults()]);
+    }
+
+    initDashboard();
+});
+</script>
+{% endblock %}

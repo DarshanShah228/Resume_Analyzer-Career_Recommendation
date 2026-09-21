@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}Compare with JD - CareerAI Match Engine{% endblock %}
+
+{% block content %}
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-light d-lg-none mr-3 border-custom" type="button" id="mobileNavToggler">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+                <h5 class="mb-0 font-weight-bold">Compare with Job Description</h5>
+                <small class="text-muted d-none d-sm-inline">Match your resume against a target role or job description</small>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="card-elevation-1 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4 gap-2">
+            <div>
+                <h3 class="h4 font-weight-bold text-on-surface mb-1">Target Job Description Comparison</h3>
+                <p class="small text-muted mb-0">Upload a JD PDF or enter the job title and job description manually.</p>
+            </div>
+            <button type="button" class="btn btn-sm btn-light border-custom font-weight-bold text-primary-custom" id="loadSampleJdBtn">
+                ⚡ Load Sample Python Developer JD
+            </button>
+        </div>
+
+        <div id="resumeStatus" class="alert alert-light border-custom small mb-4">
+            <span class="material-symbols-outlined align-middle mr-1" style="font-size:18px;">description</span>
+            <span id="resumeStatusText">Loading active resume...</span>
+        </div>
+
+        <form id="compareJdForm" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label class="font-weight-bold text-dark small d-block mb-3">Choose JD Source</label>
+                <div class="row">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="d-flex align-items-start p-3 border-custom rounded-lg h-100" style="cursor:pointer;">
+                            <input type="radio" name="jdSource" value="pdf" id="pdfSource" class="mt-1 mr-3" checked>
+                            <span>
+                                <strong class="d-block">Upload JD PDF</strong>
+                                <small class="text-muted">Upload the original job description PDF.</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="d-flex align-items-start p-3 border-custom rounded-lg h-100" style="cursor:pointer;">
+                            <input type="radio" name="jdSource" value="manual" id="manualSource" class="mt-1 mr-3">
+                            <span>
+                                <strong class="d-block">Enter JD Manually</strong>
+                                <small class="text-muted">Enter the job title and paste the job description.</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pdfSection">
+                <div class="p-3 bg-surface-low rounded-lg border-custom mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="material-symbols-outlined text-primary-custom mr-2">upload_file</span>
+                        <label for="jdFile" class="font-weight-bold text-dark small mb-0">Upload JD PDF</label>
+                    </div>
+
+                    <input type="file" class="form-control-file" id="jdFile" name="jd_file" accept=".pdf,application/pdf">
+
+                    <p class="small text-muted mb-0 mt-2">Only PDF files are accepted.</p>
+                    <div id="selectedPdf" class="small text-success mt-2 d-none"></div>
+                </div>
+            </div>
+
+            <div id="manualSection" class="d-none">
+                <div class="mb-4">
+                    <label for="jobTitleInput" class="font-weight-bold text-dark small">Job Title</label>
+                    <input type="text" id="jobTitleInput" class="form-control border-custom" placeholder="Example: Python Backend Developer">
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label for="jdTextarea" class="font-weight-bold text-dark small mb-0">Job Description</label>
+                        <span class="small text-muted"><span id="jdCharCount">0</span> characters</span>
+                    </div>
+
+                    <textarea class="form-control border-custom font-body-sm" id="jdTextarea" rows="9" placeholder="Paste the full job description here..."></textarea>
+
+                    <div class="d-flex justify-content-end align-items-center mt-2">
+                        <button type="button" class="btn btn-sm btn-link text-danger p-0 d-none" id="clearJdBtn">Clear JD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="formError" class="alert alert-danger small mt-4 d-none"></div>
+
+            <div class="mt-4 pt-3 border-top border-subtle d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                <a href="{{ url_for('main.skill_gap') }}" class="btn btn-careerai-secondary font-weight-bold">
+                    ← Back to Skill Gap
+                </a>
+
+                <button type="submit" class="btn btn-careerai-primary px-4 font-weight-bold" id="compareBtn">
+                    Analyze &amp; Compare →
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("compareJdForm");
+    const pdfSource = document.getElementById("pdfSource");
+    const manualSource = document.getElementById("manualSource");
+    const pdfSection = document.getElementById("pdfSection");
+    const manualSection = document.getElementById("manualSection");
+    const jdFile = document.getElementById("jdFile");
+    const selectedPdf = document.getElementById("selectedPdf");
+    const jobTitleInput = document.getElementById("jobTitleInput");
+    const jdTextarea = document.getElementById("jdTextarea");
+    const charCount = document.getElementById("jdCharCount");
+    const clearBtn = document.getElementById("clearJdBtn");
+    const errorBox = document.getElementById("formError");
+    const compareBtn = document.getElementById("compareBtn");
+    const resumeStatusText = document.getElementById("resumeStatusText");
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.classList.remove("d-none");
+    }
+
+    function clearError() {
+        errorBox.textContent = "";
+        errorBox.classList.add("d-none");
+    }
+
+    function updateCounter() {
+        const length = jdTextarea.value.trim().length;
+        charCount.textContent = length;
+        clearBtn.classList.toggle("d-none", length === 0);
+    }
+
+    function updateSourceSections() {
+        const isPdf = pdfSource.checked;
+        pdfSection.classList.toggle("d-none", !isPdf);
+        manualSection.classList.toggle("d-none", isPdf);
+        clearError();
+    }
+
+    function setLoading(loading) {
+        compareBtn.disabled = loading;
+        pdfSource.disabled = loading;
+        manualSource.disabled = loading;
+        jdFile.disabled = loading;
+        jobTitleInput.disabled = loading;
+        jdTextarea.disabled = loading;
+
+        compareBtn.innerHTML = loading
+            ? '<span class="spinner-border spinner-border-sm mr-2"></span>Analyzing...'
+            : "Analyze &amp; Compare →";
+    }
+
+    window.apiGet("/api/resume/latest")
+        .then(function(data) {
+            if (data && data.resume) {
+                const skills = data.resume.flat_skills || [];
+                resumeStatusText.textContent =
+                    "Active resume: " +
+                    data.resume.file_name +
+                    (skills.length ? " • Skills: " + skills.slice(0, 10).join(", ") : "");
+            } else {
+                resumeStatusText.textContent =
+                    "No active resume found. Upload and analyze a resume before comparing it with a JD.";
+            }
+        })
+        .catch(function() {
+            resumeStatusText.textContent = "Could not load the active resume.";
+        });
+
+    pdfSource.addEventListener("change", updateSourceSections);
+    manualSource.addEventListener("change", updateSourceSections);
+
+    jdFile.addEventListener("change", function() {
+        clearError();
+
+        if (!jdFile.files.length) {
+            selectedPdf.textContent = "";
+            selectedPdf.classList.add("d-none");
+            return;
+        }
+
+        const file = jdFile.files[0];
+        const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+        if (!isPdf) {
+            jdFile.value = "";
+            selectedPdf.textContent = "";
+            selectedPdf.classList.add("d-none");
+            showError("Please select a valid PDF file.");
+            return;
+        }
+
+        selectedPdf.textContent = "Selected: " + file.name;
+        selectedPdf.classList.remove("d-none");
+    });
+
+    jdTextarea.addEventListener("input", function() {
+        updateCounter();
+        clearError();
+    });
+
+    jobTitleInput.addEventListener("input", clearError);
+
+    clearBtn.addEventListener("click", function() {
+        jdTextarea.value = "";
+        updateCounter();
+        clearError();
+    });
+
+    document.getElementById("loadSampleJdBtn").addEventListener("click", function() {
+        manualSource.checked = true;
+        pdfSource.checked = false;
+        updateSourceSections();
+
+        jobTitleInput.value = "Python Backend Developer";
+        jdTextarea.value =
+            "We are looking for a Python Backend Developer proficient in Python, Django, REST APIs, PostgreSQL, SQL, Git, and Docker. Experience with microservices and AWS is a strong plus.";
+
+        updateCounter();
+        clearError();
+    });
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        clearError();
+
+        if (pdfSource.checked) {
+            const file = jdFile.files[0];
+
+            if (!file) {
+                showError("Please upload a JD PDF.");
+                return;
+            }
+
+            const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+            if (!isPdf) {
+                showError("Please upload a valid PDF file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("jd_file", file);
+
+            setLoading(true);
+
+            fetch("/api/compare-jd", {
+                method: "POST",
+                body: formData,
+                credentials: "same-origin"
+            })
+            .then(async function(response) {
+                const data = await response.json().catch(function() {
+                    return {};
+                });
+
+                if (!response.ok) {
+                    throw new Error(data.message || data.error || "JD PDF comparison failed.");
+                }
+
+                return data;
+            })
+            .then(function() {
+                window.location.href = "{{ url_for('main.jd_results') }}";
+            })
+            .catch(function(error) {
+                showError(error.message || "Comparison failed.");
+                setLoading(false);
+            });
+
+            return;
+        }
+
+        const jobTitle = jobTitleInput.value.trim();
+        const jobDescription = jdTextarea.value.trim();
+
+        if (!jobTitle) {
+            showError("Please enter the job title.");
+            return;
+        }
+
+        if (!jobDescription) {
+            showError("Please enter the job description.");
+            return;
+        }
+
+        if (jobDescription.length < 30) {
+            showError("Please provide a more complete job description.");
+            return;
+        }
+
+        setLoading(true);
+
+        window.apiPost("/api/compare-jd", {
+            target_job_title: jobTitle,
+            job_description: jobDescription
+        })
+        .then(function() {
+            window.location.href = "{{ url_for('main.jd_results') }}";
+        })
+        .catch(function(error) {
+            showError(error.message || "Comparison failed.");
+            setLoading(false);
+        });
+    });
+
+    updateCounter();
+    updateSourceSections();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,986 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upload Resume - CareerAI Intelligence
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================================
+     TOP HEADER
+========================================================= -->
+
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+
+    <div class="d-flex align-items-center justify-content-between">
+
+        <div class="d-flex align-items-center">
+
+            <!-- Mobile Menu -->
+            <button
+                class="btn btn-sm btn-light d-lg-none mr-3 border-custom"
+                type="button"
+                id="mobileNavToggler">
+
+                <span class="material-symbols-outlined">
+                    menu
+                </span>
+
+            </button>
+
+
+            <div>
+
+                <h5 class="mb-0 font-weight-bold">
+                    Upload & Parse Resume
+                </h5>
+
+                <small class="text-muted d-none d-sm-inline">
+                    Step 1: Upload document or select sample candidate profile
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Dashboard Button -->
+
+        <a
+            href="{{ url_for('main.dashboard') }}"
+            class="btn btn-sm btn-careerai-secondary">
+
+            <span
+                class="material-symbols-outlined"
+                style="font-size: 16px;">
+
+                dashboard
+
+            </span>
+
+            Dashboard
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN CANVAS
+========================================================= -->
+
+<main class="p-3 p-md-4 p-lg-5">
+
+    <div
+        class="max-w-container-max
+               mx-auto"
+        style="max-width: 960px;">
+
+
+        <!-- =====================================================
+             PAGE INTRODUCTION
+        ====================================================== -->
+
+        <div class="text-center mb-4">
+
+            <div
+                class="d-inline-flex
+                       align-items-center
+                       badge-pill-custom
+                       badge-primary-soft
+                       mb-2">
+
+                <span
+                    class="material-symbols-outlined
+                           fill-1
+                           mr-1"
+                    style="font-size: 16px;">
+
+                    auto_awesome
+
+                </span>
+
+                AI-Powered Document Parsing
+
+            </div>
+
+
+            <h2
+                class="h2
+                       font-weight-bold
+                       text-on-surface">
+
+                Upload Your Resume for AI Deep Analysis
+
+            </h2>
+
+
+            <p
+                class="text-muted
+                       mx-auto
+                       mb-0"
+                style="max-width: 600px;">
+
+                Our natural language parser extracts skills,
+                evaluates ATS compatibility, and calculates
+                your career match score in real-time.
+
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             DRAG & DROP UPLOAD
+        ====================================================== -->
+
+        <div class="card-elevation-1 p-4 mb-4">
+
+            <div
+                class="upload-dropzone"
+                id="dropzoneArea"
+                onclick="document.getElementById('fileInput').click();">
+
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    class="d-none"
+                    accept=".pdf,.docx,.doc,.txt"
+                    onchange="handleFileSelect(this.files)">
+
+
+                <span
+                    class="material-symbols-outlined
+                           text-primary-custom
+                           mb-3"
+                    style="font-size: 54px;">
+
+                    cloud_upload
+
+                </span>
+
+
+                <h4
+                    class="h5
+                           font-weight-bold
+                           text-dark
+                           mb-2">
+
+                    Drag & Drop Your Resume File Here
+
+                </h4>
+
+
+                <p class="small text-muted mb-3">
+
+                    Supports PDF, DOCX, or TXT documents
+                    (Max file size: 10MB)
+
+                </p>
+
+
+                <button
+                    type="button"
+                    class="btn
+                           btn-careerai-primary
+                           btn-sm
+                           px-4">
+
+                    <span
+                        class="material-symbols-outlined
+                               mr-1"
+                        style="font-size: 16px;">
+
+                        folder_open
+
+                    </span>
+
+                    Browse Local File
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SAMPLE RESUME SELECTOR
+        ====================================================== -->
+
+        <div
+            class="card-elevation-1
+                   p-4
+                   mb-4"
+            style="border-left: 4px solid var(--color-secondary-container);">
+
+
+            <div
+                class="d-flex
+                       align-items-center
+                       mb-3">
+
+                <span
+                    class="material-symbols-outlined
+                           text-secondary-custom
+                           mr-2
+                           fill-1">
+
+                    bolt
+
+                </span>
+
+
+                <h5
+                    class="h6
+                           font-weight-bold
+                           text-dark
+                           mb-0">
+
+                    Try Pre-Loaded Candidate Profiles
+                    (Instant Demo)
+
+                </h5>
+
+            </div>
+
+
+            <p class="small text-muted mb-3">
+
+                Don't have a resume PDF ready? Click any of the
+                pre-loaded academic & engineer sample profiles
+                below to test the full analysis pipeline instantly:
+
+            </p>
+
+
+            <div class="row gy-3">
+
+
+                <!-- =================================================
+                     MCA GRADUATE
+                ================================================== -->
+
+                <div
+                    class="col-md-4
+                           mb-2
+                           mb-md-0">
+
+                    <button
+                        type="button"
+                        onclick="loadSampleResumeByName('mca_graduate')"
+                        class="btn
+                               btn-block
+                               btn-light
+                               border-custom
+                               p-3
+                               text-left
+                               h-100">
+
+
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   align-items-center
+                                   mb-1">
+
+                            <strong
+                                class="text-primary-custom
+                                       small">
+
+                                MCA Graduate
+
+                            </strong>
+
+
+                            <span class="badge badge-success">
+
+                                84 Score
+
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="d-block
+                                   text-dark
+                                   font-weight-bold
+                                   small
+                                   mb-1">
+
+                            Darshan Kumar
+
+                        </span>
+
+
+                        <small
+                            class="text-muted
+                                   d-block"
+                            style="font-size: 0.75rem;">
+
+                            Python, Django, SQL, REST APIs,
+                            MCA Degree
+
+                        </small>
+
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     SOFTWARE ENGINEER
+                ================================================== -->
+
+                <div
+                    class="col-md-4
+                           mb-2
+                           mb-md-0">
+
+                    <button
+                        type="button"
+                        onclick="loadSampleResumeByName('software_engineer')"
+                        class="btn
+                               btn-block
+                               btn-light
+                               border-custom
+                               p-3
+                               text-left
+                               h-100">
+
+
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   align-items-center
+                                   mb-1">
+
+                            <strong
+                                class="text-secondary-custom
+                                       small">
+
+                                Software Engineer
+
+                            </strong>
+
+
+                            <span class="badge badge-success">
+
+                                92 Score
+
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="d-block
+                                   text-dark
+                                   font-weight-bold
+                                   small
+                                   mb-1">
+
+                            Ananya Sharma
+
+                        </span>
+
+
+                        <small
+                            class="text-muted
+                                   d-block"
+                            style="font-size: 0.75rem;">
+
+                            Python, React, PostgreSQL,
+                            Docker, AWS
+
+                        </small>
+
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     DATA ANALYST
+                ================================================== -->
+
+                <div class="col-md-4">
+
+                    <button
+                        type="button"
+                        onclick="loadSampleResumeByName('data_analyst')"
+                        class="btn
+                               btn-block
+                               btn-light
+                               border-custom
+                               p-3
+                               text-left
+                               h-100">
+
+
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   align-items-center
+                                   mb-1">
+
+                            <strong
+                                class="text-info
+                                       small">
+
+                                Data Analyst
+
+                            </strong>
+
+
+                            <span class="badge badge-warning">
+
+                                78 Score
+
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="d-block
+                                   text-dark
+                                   font-weight-bold
+                                   small
+                                   mb-1">
+
+                            Rahul Verma
+
+                        </span>
+
+
+                        <small
+                            class="text-muted
+                                   d-block"
+                            style="font-size: 0.75rem;">
+
+                            Python, Pandas, SQL,
+                            PowerBI, Statistics
+
+                        </small>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CURRENT ACTIVE RESUME
+        ====================================================== -->
+
+        <div class="card-elevation-1 p-4">
+
+            <h5
+                class="h6
+                       font-weight-bold
+                       text-dark
+                       mb-3
+                       d-flex
+                       align-items-center
+                       justify-content-between">
+
+                <span>
+
+                    Currently Active Resume State
+
+                </span>
+
+
+                <span
+                    class="badge
+                           badge-pill-custom
+                           badge-tertiary-soft">
+
+                    Loaded in Memory
+
+                </span>
+
+            </h5>
+
+
+            <div
+                class="d-flex
+                       align-items-center
+                       justify-content-between
+                       p-3
+                       bg-surface-low
+                       rounded-lg
+                       border-custom
+                       mb-3">
+
+
+                <div
+                    class="d-flex
+                           align-items-center">
+
+                    <span
+                        class="material-symbols-outlined
+                               text-secondary-custom
+                               mr-3"
+                        style="font-size: 32px;">
+
+                        description
+
+                    </span>
+
+
+                    <div>
+
+                        <strong
+                            class="d-block
+                                   text-dark"
+                            id="activeFileName">
+
+                            Darshan_Resume_MCA.pdf
+
+                        </strong>
+
+
+                        <small class="text-muted">
+
+                            Status:
+
+                            <span
+                                class="text-success
+                                       font-weight-bold"
+                                id="activeStatus">
+
+                                Analyzed
+
+                            </span>
+
+                            &bull;
+
+                            Score:
+
+                            <strong id="activeScore">
+
+                                82/100
+
+                            </strong>
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Analysis Button -->
+
+                <a
+                    href="{{ url_for('main.resume_analysis') }}"
+                    class="btn
+                           btn-sm
+                           btn-careerai-primary">
+
+                    View Detailed Analysis &rarr;
+
+                </a>
+
+            </div>
+
+
+            <!-- Reset -->
+
+            <div
+                class="d-flex
+                       justify-content-end
+                       gap-2">
+
+                <button
+                    type="button"
+                    onclick="location.reload();"
+                    class="btn
+                           btn-sm
+                           btn-light
+                           border-custom
+                           text-muted">
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     AI PARSING LOADING OVERLAY
+========================================================= -->
+
+<div
+    class="loading-overlay"
+    id="ai-parsing-overlay">
+
+
+    <div class="pulse-spinner mb-3">
+
+        <span
+            class="material-symbols-outlined
+                   fill-1">
+
+            auto_awesome
+
+        </span>
+
+    </div>
+
+
+    <h4
+        class="h5
+               font-weight-bold
+               text-dark
+               mb-1">
+
+        CareerAI Natural Language Engine
+
+    </h4>
+
+
+    <p
+        class="text-muted
+               small"
+        id="ai-step-label">
+
+        Extracting text from resume file...
+
+    </p>
+
+
+    <div
+        class="progress
+               w-100
+               mt-2"
+        style="max-width: 300px;
+               height: 6px;">
+
+        <div
+            class="progress-bar
+                   progress-bar-striped
+                   progress-bar-animated
+                   bg-primary-custom"
+            style="width: 100%;">
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+<!-- =========================================================
+     PAGE-SPECIFIC JAVASCRIPT
+========================================================= -->
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        /*
+         * Load the current user's latest resume from the backend
+         * (real data, fetched via the Flask JSON API).
+         */
+
+        if (typeof window.apiGet === 'function') {
+
+            window.apiGet('/api/resume/latest').then(function (data) {
+
+                if (!data || !data.resume) {
+                    return;
+                }
+
+                const fileName = document.getElementById('activeFileName');
+                const status = document.getElementById('activeStatus');
+                const score = document.getElementById('activeScore');
+
+                if (fileName) {
+                    fileName.textContent = data.resume.file_name;
+                }
+
+                if (status) {
+                    status.textContent = data.resume.analyzed ? 'Analyzed' : 'Uploaded';
+                }
+
+                if (score && data.resume.analyzed) {
+                    score.textContent = data.resume.overall_score + '/100';
+                }
+
+            }).catch(function () {
+                /* no resume yet — leave the placeholder card as-is */
+            });
+
+        }
+
+
+        /*
+         * Setup drag & drop events
+         */
+
+        const dropzone =
+            document.getElementById(
+                'dropzoneArea'
+            );
+
+
+        if (!dropzone) {
+            return;
+        }
+
+
+        /*
+         * Drag Enter / Drag Over
+         */
+
+        [
+            'dragenter',
+            'dragover'
+        ].forEach(
+            function (eventName) {
+
+                dropzone.addEventListener(
+                    eventName,
+                    function (e) {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        dropzone.classList.add(
+                            'dragover'
+                        );
+
+                    },
+                    false
+                );
+
+            }
+        );
+
+
+        /*
+         * Drag Leave / Drop
+         */
+
+        [
+            'dragleave',
+            'drop'
+        ].forEach(
+            function (eventName) {
+
+                dropzone.addEventListener(
+                    eventName,
+                    function (e) {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        dropzone.classList.remove(
+                            'dragover'
+                        );
+
+                    },
+                    false
+                );
+
+            }
+        );
+
+
+        /*
+         * Handle Drop
+         */
+
+        dropzone.addEventListener(
+            'drop',
+            function (e) {
+
+                const dataTransfer =
+                    e.dataTransfer;
+
+
+                const files =
+                    dataTransfer.files;
+
+
+                handleFileSelect(files);
+
+            },
+            false
+        );
+
+    }
+);
+
+
+/*
+ * Handle Resume File
+ */
+
+function handleFileSelect(files) {
+
+    if (
+        !files ||
+        files.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const file =
+        files[0];
+
+
+    /*
+     * Basic file validation
+     */
+
+    const allowedExtensions = [
+        '.pdf',
+        '.docx',
+        '.doc',
+        '.txt'
+    ];
+
+
+    const fileName =
+        file.name.toLowerCase();
+
+
+    const validExtension =
+        allowedExtensions.some(
+            function (extension) {
+
+                return fileName.endsWith(
+                    extension
+                );
+
+            }
+        );
+
+
+    if (!validExtension) {
+
+        if (window.showToast) {
+
+            window.showToast(
+                'Invalid File',
+                'Please upload a PDF, DOCX, DOC, or TXT resume.',
+                'error'
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * 10 MB maximum
+     */
+
+    const maxSize =
+        10 * 1024 * 1024;
+
+
+    if (file.size > maxSize) {
+
+        if (window.showToast) {
+
+            window.showToast(
+                'File Too Large',
+                'Resume file size must be less than 10MB.',
+                'error'
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * Real upload: send the file to the Flask backend, which
+     * extracts the text, runs the analyzer, and stores the results.
+     */
+
+    const overlay = document.getElementById('ai-parsing-overlay');
+    const stepLabel = document.getElementById('ai-step-label');
+
+    if (overlay) {
+        overlay.classList.add('active');
+        overlay.style.display = 'flex';
+    }
+    if (stepLabel) {
+        stepLabel.textContent = 'Uploading and extracting text from resume...';
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    window.apiUpload('/api/resume/upload', formData)
+        .then(function (data) {
+
+            if (stepLabel) {
+                stepLabel.textContent = 'Analysis complete!';
+            }
+
+            if (window.showToast) {
+                window.showToast(
+                    'Resume Analyzed',
+                    'Overall score: ' + data.overall_score + '/100',
+                    'success'
+                );
+            }
+
+            window.location.href = "{{ url_for('main.resume_analysis') }}";
+
+        })
+        .catch(function (err) {
+
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+            }
+
+            if (window.showToast) {
+                window.showToast('Upload Failed', err.message, 'error');
+            }
+
+        });
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CareerAI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #16202b;
+            --ink-soft: #2a3542;
+            --paper: #f5f4ef;
+            --paper-dim: #eceae2;
+            --line: #dcd8cc;
+            --line-on-ink: rgba(245, 244, 239, 0.16);
+            --gold: #c99a3b;
+            --gold-dark: #a97f2c;
+            --moss: #3c6e5e;
+            --error: #b3483f;
+            --text-muted: #8b94a0;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'IBM Plex Sans', sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+        }
+
+        .login-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+        }
+
+        /* ---------------- LEFT: editorial panel ---------------- */
+
+        .login-visual {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 3.5rem 3.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-visual::after {
+            content: "";
+            position: absolute;
+            right: -120px;
+            bottom: -120px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,154,59,0.16) 0%, rgba(201,154,59,0) 70%);
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
+        }
+
+        .brand-mark .material-symbols-outlined {
+            font-size: 20px;
+            color: var(--gold);
+        }
+
+        .brand-mark span.accent { color: var(--gold); }
+
+        .visual-headline {
+            max-width: 420px;
+        }
+
+        .visual-headline h1 {
+            font-family: 'Fraunces', serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-size: clamp(2.1rem, 3.4vw, 2.9rem);
+            line-height: 1.18;
+            margin: 0 0 0.85rem;
+            letter-spacing: -0.01em;
+        }
+
+        .visual-headline p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(245, 244, 239, 0.68);
+            margin: 0;
+            max-width: 340px;
+        }
+
+        .doc-checklist {
+            border-top: 1px solid var(--line-on-ink);
+        }
+
+        .doc-check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--line-on-ink);
+        }
+
+        .doc-check-item .material-symbols-outlined {
+            font-size: 17px;
+            color: var(--gold);
+            margin-top: 0.1rem;
+        }
+
+        .doc-check-item .text strong {
+            display: block;
+            font-size: 0.86rem;
+            color: var(--paper);
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .doc-check-item .text span {
+            font-size: 0.78rem;
+            color: rgba(245, 244, 239, 0.6);
+            line-height: 1.5;
+        }
+
+        /* ---------------- RIGHT: form panel ---------------- */
+
+        .login-form-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+        }
+
+        .login-form-card {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .form-heading h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: 1.7rem;
+            margin: 0 0 0.35rem;
+            letter-spacing: -0.01em;
+        }
+
+        .form-heading p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0 0 1.6rem;
+        }
+
+        .form-alert {
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.6rem 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+        }
+
+        .form-alert.danger,
+        .form-alert.error {
+            background: rgba(179, 72, 63, 0.08);
+            border-color: rgba(179, 72, 63, 0.25);
+            color: var(--error);
+        }
+
+        .form-alert.success {
+            background: rgba(60, 110, 94, 0.08);
+            border-color: rgba(60, 110, 94, 0.25);
+            color: var(--moss);
+        }
+
+        .form-alert.info {
+            background: rgba(22, 32, 43, 0.05);
+            border-color: var(--line);
+            color: var(--ink-soft);
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 1rem;
+        }
+
+        .field-grid .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field {
+            position: relative;
+            margin-bottom: 1.3rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .field-input-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid var(--line);
+            padding-bottom: 0.4rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .field-input-row:focus-within {
+            border-color: var(--gold);
+        }
+
+        .field-input-row .material-symbols-outlined {
+            font-size: 17px;
+            color: var(--text-muted);
+            margin-right: 0.5rem;
+        }
+
+        .field input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--ink);
+            width: 100%;
+            min-width: 0;
+        }
+
+        .field input::placeholder {
+            color: #b7bcc4;
+        }
+
+        .btn-signup {
+            width: 100%;
+            border: none;
+            background: var(--gold);
+            color: var(--ink);
+            font-weight: 700;
+            font-size: 0.88rem;
+            padding: 0.85rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.18s ease;
+            margin-top: 0.4rem;
+        }
+
+        .btn-signup:hover {
+            background: var(--gold-dark);
+        }
+
+        .btn-signup:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.6rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .form-footer a {
+            color: var(--ink);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 0.25rem;
+            border-bottom: 1px solid var(--ink);
+        }
+
+        /* ---------------- responsive ---------------- */
+
+        @media (max-width: 860px) {
+            .login-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .login-visual {
+                padding: 2.25rem 1.75rem;
+                min-height: 220px;
+            }
+
+            .visual-headline p {
+                max-width: none;
+            }
+
+            .doc-checklist {
+                display: none;
+            }
+
+            .login-form-side {
+                padding: 2rem 1.5rem 3rem;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
+    </style>
+</head>
+<body class="auth-body">
+
+<div class="login-shell">
+
+    <!-- LEFT: editorial panel -->
+    <div class="login-visual">
+
+        <div class="brand-mark">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span>Career<span class="accent">AI</span></span>
+        </div>
+
+        <div class="visual-headline">
+            <h1>Bring your resume. Leave with a plan.</h1>
+            <p>Create an account to save your analyses, track skill gaps over time, and compare against real job descriptions.</p>
+        </div>
+
+        <div class="doc-checklist">
+            <div class="doc-check-item">
+                <span class="material-symbols-outlined">description</span>
+                <div class="text">
+                    <strong>Instant resume scoring</strong>
+                    <span>ATS format, skills, and impact — broken down clearly.</span>
+                </div>
+            </div>
+            <div class="doc-check-item">
+                <span class="material-symbols-outlined">query_stats</span>
+                <div class="text">
+                    <strong>Skill-gap tracking</strong>
+                    <span>See exactly what's missing for the roles you want.</span>
+                </div>
+            </div>
+            <div class="doc-check-item">
+                <span class="material-symbols-outlined">fact_check</span>
+                <div class="text">
+                    <strong>Job description matching</strong>
+                    <span>Paste any JD and see your fit in seconds.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT: form panel -->
+    <div class="login-form-side">
+        <div class="login-form-card">
+
+            <div class="form-heading">
+                <h2>Create account</h2>
+                <p>Set up your CareerAI profile to get started.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="form-alert {{ 'danger' if category in ['danger','error'] else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form id="signupForm" method="POST" action="{{ url_for('main.signup') }}">
+
+                <div class="field">
+                    <label for="signupName">Full name</label>
+                    <div class="field-input-row">
+                        <span class="material-symbols-outlined">badge</span>
+                        <input type="text" name="name" id="signupName" placeholder="Abhay Shihora" required autocomplete="name">
+                    </div>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="signupUsername">Username</label>
+                        <div class="field-input-row">
+                            <span class="material-symbols-outlined">person</span>
+                            <input type="text" name="username" id="signupUsername" placeholder="AbhayShihora" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="signupEmail">Email</label>
+                        <div class="field-input-row">
+                            <span class="material-symbols-outlined">mail</span>
+                            <input type="email" name="email" id="signupEmail" placeholder="shihoraabhay0@mail.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="signupPassword">Password</label>
+                        <div class="field-input-row">
+                            <span class="material-symbols-outlined">lock</span>
+                            <input type="password" name="password" id="signupPassword" placeholder="••••••••" required autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="signupConfirmPassword">Confirm password</label>
+                        <div class="field-input-row">
+                            <span class="material-symbols-outlined">lock_reset</span>
+                            <input type="password" name="confirm_password" id="signupConfirmPassword" placeholder="••••••••" required autocomplete="new-password">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-signup">Create account</button>
+            </form>
+
+            <div class="form-footer">
+                Already have an account?
+                <a href="{{ url_for('main.login') }}">Sign in</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lightweight client-side pre-check only (real validation happens on the server).
+        const signupForm = document.getElementById('signupForm');
+
+        if (signupForm) {
+            signupForm.addEventListener('submit', function (e) {
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    if (window.showToast) {
+                        window.showToast('Password Mismatch', 'Passwords do not match.', 'error');
+                    } else {
+                        alert('Passwords do not match.');
+                    }
+                }
+                // Otherwise let the form POST normally to Flask.
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

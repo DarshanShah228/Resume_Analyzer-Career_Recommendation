@@ -1,0 +1,36 @@
+{
+  "skill_recommendations": {
+    "default": "Build a small project using {skill} and add it to your resume with measurable impact (e.g. performance, users, or time saved).",
+    "Python": "Take an advanced Python course and contribute to an open-source Python project to strengthen this core skill.",
+    "SQL": "Practice writing complex SQL queries (joins, window functions) on platforms like LeetCode or HackerRank.",
+    "Django": "Build a Django web application with authentication, CRUD operations, REST APIs, and database integration.",
+    "Flask": "Build a Flask application with REST APIs, authentication, database integration, and proper project structure.",
+    "REST API": "Build and document REST APIs using Python and test them with Postman.",
+    "Docker": "Containerize one of your existing projects with Docker and document the setup in your resume.",
+    "AWS": "Complete the AWS Cloud Practitioner certification and deploy a personal project on AWS Free Tier.",
+    "Machine Learning": "Complete a hands-on ML course and build an end-to-end ML project.",
+    "System Design": "Study system design fundamentals and practice designing a scalable service such as a URL shortener or chat application.",
+    "React": "Build a multi-page React application with state management and deploy it to showcase on your resume.",
+    "Git": "Practice branching, merging, and pull requests using Git and host your projects on GitHub."
+  },
+  "action_verbs": [
+    "Architected",
+    "Engineered",
+    "Optimized",
+    "Automated",
+    "Designed",
+    "Implemented",
+    "Streamlined",
+    "Spearheaded",
+    "Developed",
+    "Delivered"
+  ],
+  "impact_phrases": [
+    "reducing processing time by 25%",
+    "improving system performance by 30%",
+    "cutting manual effort by 40%",
+    "supporting 10,000+ monthly active users",
+    "increasing test coverage to 90%",
+    "reducing deployment time by 50%"
+  ]
+}

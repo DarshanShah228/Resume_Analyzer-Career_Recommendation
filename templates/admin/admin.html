@@ -1,0 +1,1017 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}
+CareerAI Admin Panel
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page" data-current-user-id="{{ current_user.id }}">
+
+<style>
+    .admin-page {
+        --ink: #16202b;
+        --ink-soft: #2a3542;
+        --paper: #f5f4ef;
+        --paper-dim: #eceae2;
+        --line: #dcd8cc;
+        --gold: #c99a3b;
+        --gold-dark: #a97f2c;
+        --gold-soft: rgba(201, 154, 59, 0.12);
+        --moss: #3c6e5e;
+        --moss-soft: rgba(60, 110, 94, 0.1);
+        --error: #b3483f;
+        --error-soft: rgba(179, 72, 63, 0.08);
+        --text-muted: #8b94a0;
+        font-family: 'IBM Plex Sans', sans-serif;
+        color: var(--ink);
+    }
+
+    .admin-page h1, .admin-page h2, .admin-page h3,
+    .admin-page h4, .admin-page h5, .admin-page h6 {
+        font-family: 'Fraunces', 'IBM Plex Sans', serif;
+        font-weight: 500;
+    }
+
+    /* ---------- header ---------- */
+
+    .admin-page .ap-header {
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .admin-page .ap-header h5 {
+        font-size: 1.15rem;
+        color: var(--ink);
+        margin-bottom: 0.1rem;
+    }
+
+    .admin-page .ap-header small {
+        color: var(--text-muted);
+    }
+
+    .admin-page .btn-ap-primary {
+        background: var(--gold);
+        border: 1px solid var(--gold);
+        color: var(--ink);
+        font-weight: 700;
+        border-radius: 4px;
+    }
+
+    .admin-page .btn-ap-primary:hover {
+        background: var(--gold-dark);
+        border-color: var(--gold-dark);
+        color: var(--ink);
+    }
+
+    .admin-page .btn-ap-ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--error);
+        font-weight: 700;
+        border-radius: 4px;
+    }
+
+    .admin-page .btn-ap-ghost:hover {
+        background: var(--error-soft);
+        color: var(--error);
+    }
+
+    .admin-page .btn-ap-light {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        color: var(--ink-soft);
+        border-radius: 4px;
+    }
+
+    .admin-page .btn-ap-light:hover {
+        background: var(--paper-dim);
+        color: var(--ink);
+    }
+
+    /* ---------- section headers ---------- */
+
+    .admin-page .ap-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
+    }
+
+    /* ---------- stat cards ---------- */
+
+    .admin-page .ap-stat {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--ink);
+        border-radius: 4px;
+        padding: 1.1rem 1.25rem;
+        height: 100%;
+    }
+
+    .admin-page .ap-stat.accent-gold { border-top-color: var(--gold); }
+    .admin-page .ap-stat.accent-moss { border-top-color: var(--moss); }
+    .admin-page .ap-stat.accent-error { border-top-color: var(--error); }
+
+    .admin-page .ap-stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.55rem;
+    }
+
+    .admin-page .ap-stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .admin-page .ap-stat .material-symbols-outlined {
+        font-size: 18px;
+        color: var(--text-muted);
+    }
+
+    .admin-page .ap-stat-value {
+        font-size: 1.85rem;
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1;
+        display: block;
+    }
+
+    .admin-page .ap-stat-note {
+        font-size: 0.72rem;
+        color: var(--moss);
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    /* ---------- panels ---------- */
+
+    .admin-page .ap-panel {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1.6rem;
+        height: 100%;
+    }
+
+    .admin-page .ap-panel h6 {
+        font-size: 1.02rem;
+        color: var(--ink);
+        margin-bottom: 0.15rem;
+    }
+
+    .admin-page .ap-panel-sub {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 1.15rem;
+        display: block;
+    }
+
+    /* ---------- tables (shared: recent + directory) ---------- */
+
+    .admin-page table.ap-table {
+        margin-bottom: 0;
+    }
+
+    .admin-page table.ap-table thead th {
+        border-top: none;
+        border-bottom: 1.5px solid var(--ink);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        color: var(--text-muted);
+        padding-bottom: 0.55rem;
+        background: transparent;
+    }
+
+    .admin-page table.ap-table tbody td {
+        border-top: 1px solid var(--line);
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        vertical-align: middle;
+    }
+
+    .admin-page table.ap-table tbody tr:hover {
+        background: var(--paper-dim);
+    }
+
+    .admin-page .ap-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.55rem;
+        border-radius: 100px;
+    }
+
+    .admin-page .ap-pill .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .admin-page .ap-pill.role-admin { background: var(--gold-soft); color: var(--gold-dark); }
+    .admin-page .ap-pill.role-admin .dot { background: var(--gold); }
+    .admin-page .ap-pill.role-user { background: var(--moss-soft); color: var(--moss); }
+    .admin-page .ap-pill.role-user .dot { background: var(--moss); }
+
+    .admin-page .ap-icon-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+        background: var(--paper);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin-page .ap-icon-btn:hover {
+        background: var(--paper-dim);
+    }
+
+    .admin-page .ap-icon-btn .material-symbols-outlined {
+        font-size: 16px;
+    }
+
+    .admin-page .ap-empty {
+        padding: 2.75rem 1rem;
+        text-align: center;
+    }
+
+    .admin-page .ap-empty .material-symbols-outlined {
+        font-size: 38px;
+        color: var(--text-muted);
+        margin-bottom: 0.65rem;
+    }
+
+    .admin-page .ap-empty h6 {
+        font-size: 0.98rem;
+        color: var(--ink);
+        margin-bottom: 0.2rem;
+    }
+
+    .admin-page .ap-empty p {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* ---------- role distribution bars ---------- */
+
+    .admin-page .ap-bar-row {
+        margin-bottom: 1.1rem;
+    }
+
+    .admin-page .ap-bar-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .admin-page .ap-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .admin-page .ap-bar-label .name {
+        font-weight: 600;
+        color: var(--ink-soft);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .admin-page .ap-bar-label .name .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .admin-page .ap-bar-label .value {
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .admin-page .ap-bar-track {
+        background: var(--paper-dim);
+        border-radius: 100px;
+        height: 8px;
+        overflow: hidden;
+    }
+
+    .admin-page .ap-bar-fill {
+        height: 100%;
+        border-radius: 100px;
+        transition: width 0.4s ease;
+    }
+
+    .admin-page .ap-snapshot {
+        border-top: 1px solid var(--line);
+        margin-top: 1.3rem;
+        padding-top: 0.1rem;
+    }
+
+    .admin-page .ap-snapshot-item {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .admin-page .ap-snapshot-item .label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .admin-page .ap-snapshot-item .value {
+        font-family: 'Fraunces', serif;
+        font-weight: 500;
+        font-size: 1.02rem;
+        color: var(--ink);
+    }
+
+    /* ---------- directory search ---------- */
+
+    .admin-page .ap-search {
+        display: flex;
+        align-items: center;
+        border-bottom: 1.5px solid var(--line);
+        padding: 0.4rem 0.1rem;
+        max-width: 320px;
+        width: 100%;
+    }
+
+    @media (max-width: 767.98px) {
+        .admin-page .ap-search {
+            max-width: 100%;
+        }
+    }
+
+    .admin-page .ap-search:focus-within {
+        border-color: var(--gold);
+    }
+
+    .admin-page .ap-search .material-symbols-outlined {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-right: 0.5rem;
+    }
+
+    .admin-page .ap-search input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.85rem;
+        width: 100%;
+        color: var(--ink);
+    }
+
+    .admin-page .ap-search input::placeholder {
+        color: #b7bcc4;
+    }
+
+    /* ---------- modals ---------- */
+
+    .admin-page .modal-content {
+        border-radius: 4px;
+        border: 1px solid var(--line);
+    }
+
+    .admin-page .modal-header {
+        border-bottom: 1px solid var(--line);
+        background: var(--paper);
+    }
+
+    .admin-page .modal-header .modal-title {
+        font-size: 1.15rem;
+        color: var(--ink);
+    }
+
+    .admin-page .modal-footer {
+        background: var(--paper) !important;
+        border-top: 1px solid var(--line) !important;
+    }
+
+    .admin-page .modal-body label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: none;
+    }
+
+    .admin-page .modal-body .form-control {
+        border: none;
+        border-bottom: 1.5px solid var(--line);
+        border-radius: 0;
+        padding-left: 0.15rem;
+        font-size: 0.9rem;
+        box-shadow: none !important;
+    }
+
+    .admin-page .modal-body .form-control:focus {
+        border-color: var(--gold);
+    }
+
+    .admin-page .modal-body select.form-control {
+        background: transparent;
+    }
+</style>
+
+<!-- Top Header -->
+<header class="ap-header py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-ap-light d-lg-none mr-3" type="button" id="mobileNavToggler">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+                <h5 class="mb-0">Admin panel</h5>
+                <small class="d-none d-sm-inline">
+                    Overview and account management, in one place
+                </small>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+            <button type="button" onclick="openAddUserModal()" class="btn btn-sm btn-ap-primary d-flex align-items-center">
+                <span class="material-symbols-outlined mr-1" style="font-size: 16px;">person_add</span>
+                Add user
+            </button>
+
+            <button type="button" onclick="window.location.href='{{ url_for("main.logout") }}'" class="btn btn-sm btn-ap-ghost d-flex align-items-center">
+                <span class="material-symbols-outlined mr-1" style="font-size: 16px;">logout</span>
+                Logout
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Admin Canvas -->
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="main-content-container">
+
+        <!-- ============== OVERVIEW ============== -->
+
+        <div class="ap-section-title">OVERVIEW</div>
+
+        <div class="row mb-3 gy-3">
+
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="ap-stat">
+                    <div class="ap-stat-top">
+                        <span class="ap-stat-label">Total users</span>
+                        <span class="material-symbols-outlined">group</span>
+                    </div>
+                    <span class="ap-stat-value" id="statTotalUsers">0</span>
+                    <span class="ap-stat-note" id="statNewThisWeek">+0 this week</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="ap-stat accent-gold">
+                    <div class="ap-stat-top">
+                        <span class="ap-stat-label">Admin accounts</span>
+                        <span class="material-symbols-outlined">admin_panel_settings</span>
+                    </div>
+                    <span class="ap-stat-value" id="statAdminUsers">0</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="ap-stat accent-moss">
+                    <div class="ap-stat-top">
+                        <span class="ap-stat-label">Regular users</span>
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+                    <span class="ap-stat-value" id="statRegularUsers">0</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="ap-stat accent-error">
+                    <div class="ap-stat-top">
+                        <span class="ap-stat-label">Signed up today</span>
+                        <span class="material-symbols-outlined">today</span>
+                    </div>
+                    <span class="ap-stat-value" id="statToday">0</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mb-4 gy-3">
+
+            <div class="col-lg-8 mb-3 mb-lg-0">
+                <div class="ap-panel">
+
+                    <h6>Recently registered</h6>
+                    <span class="ap-panel-sub">The last accounts created on CareerAI</span>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover ap-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentUsersTableBody">
+                                <!-- JavaScript renders rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="ap-empty d-none" id="recentUsersEmptyState">
+                        <span class="material-symbols-outlined">no_accounts</span>
+                        <p>No registered users yet — new signups will show up here.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="ap-panel">
+
+                    <h6>Role distribution</h6>
+                    <span class="ap-panel-sub">Share of admin vs. regular accounts</span>
+
+                    <div class="ap-bar-row">
+                        <div class="ap-bar-label">
+                            <span class="name"><span class="dot" style="background: var(--moss);"></span>Regular users</span>
+                            <span class="value" id="barRegularValue">0%</span>
+                        </div>
+                        <div class="ap-bar-track">
+                            <div class="ap-bar-fill" id="barRegularFill" style="width: 0%; background: var(--moss);"></div>
+                        </div>
+                    </div>
+
+                    <div class="ap-bar-row">
+                        <div class="ap-bar-label">
+                            <span class="name"><span class="dot" style="background: var(--gold);"></span>Admins</span>
+                            <span class="value" id="barAdminValue">0%</span>
+                        </div>
+                        <div class="ap-bar-track">
+                            <div class="ap-bar-fill" id="barAdminFill" style="width: 0%; background: var(--gold);"></div>
+                        </div>
+                    </div>
+
+                    <div class="ap-snapshot">
+                        <div class="ap-snapshot-item">
+                            <span class="label">Signups this month</span>
+                            <span class="value" id="snapshotMonth">0</span>
+                        </div>
+                        <div class="ap-snapshot-item">
+                            <span class="label">Admin ratio</span>
+                            <span class="value" id="snapshotRatio">0%</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============== USER DIRECTORY ============== -->
+
+        <div class="ap-section-title">ALL USERS</div>
+
+        <div class="ap-panel mb-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4" style="gap: 1rem;">
+                <div>
+                    <h6>Registered users</h6>
+                    <span class="ap-panel-sub mb-0">Search, edit roles, or remove accounts</span>
+                </div>
+
+                <div class="ap-search">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="adminUserSearch" placeholder="Search by name, username, or email">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover ap-table" id="userTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- JavaScript renders users here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ap-empty d-none" id="userEmptyState">
+                <span class="material-symbols-outlined">no_accounts</span>
+                <h6>No users found</h6>
+                <p>No registered accounts match your search filter.</p>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- Edit / Add User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog"
+     aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit user details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="editUserForm">
+                <div class="modal-body p-4">
+
+                    <input type="hidden" id="editUserId">
+
+                    <div class="form-group mb-3">
+                        <label for="editName">Full name</label>
+                        <input type="text" class="form-control" id="editName" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="editUsername">Username</label>
+                        <input type="text" class="form-control" id="editUsername" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="editEmail">Email address</label>
+                        <input type="email" class="form-control" id="editEmail" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="editPassword">Password</label>
+                        <input type="password" class="form-control" id="editPassword" minlength="6" autocomplete="new-password">
+                        <small class="form-text text-muted">Required when creating a user. Leave blank when editing to keep the current password.</small>
+                    </div>
+
+                    <div class="form-group mb-1">
+                        <label for="editRole">System role</label>
+                        <select class="form-control font-weight-bold" id="editRole">
+                            <option value="user">User (regular access)</option>
+                            <option value="admin">Admin (full access)</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ap-light" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-ap-primary px-4">Save changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteUserModalLabel">Confirm user deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-4 text-center">
+                <span class="material-symbols-outlined text-danger mb-3" style="font-size: 42px;">warning</span>
+                <h6 class="mb-2">Are you sure you want to delete this user?</h6>
+                <p class="small mb-0" style="color: var(--text-muted);" id="deleteModalUserName">
+                    This action will permanently remove this account from the database.
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-ap-light px-4" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger font-weight-bold px-4" id="confirmDeleteUserBtn">Delete account</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let pendingDeleteUserId = null;
+let adminUsers = [];
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatDate(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '—';
+    return date.toLocaleDateString(undefined, {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
+}
+
+function setLoading(isLoading) {
+    const buttons = document.querySelectorAll('#editUserForm button[type="submit"], #confirmDeleteUserBtn');
+    buttons.forEach(function (button) {
+        button.disabled = isLoading;
+    });
+}
+
+function renderOverviewStats(stats) {
+    stats = stats || {};
+
+    document.getElementById('statTotalUsers').textContent = stats.total || 0;
+    document.getElementById('statAdminUsers').textContent = stats.admins || 0;
+    document.getElementById('statRegularUsers').textContent = stats.regular || 0;
+    document.getElementById('statToday').textContent = stats.signed_up_today || 0;
+    document.getElementById('statNewThisWeek').textContent = '+' + (stats.signed_up_this_week || 0) + ' this week';
+
+    const adminPct = Number(stats.admin_percentage || 0);
+    const regularPct = Number(stats.regular_percentage || 0);
+
+    document.getElementById('barAdminValue').textContent = adminPct + '%';
+    document.getElementById('barAdminFill').style.width = adminPct + '%';
+    document.getElementById('barRegularValue').textContent = regularPct + '%';
+    document.getElementById('barRegularFill').style.width = regularPct + '%';
+    document.getElementById('snapshotMonth').textContent = stats.signed_up_this_month || 0;
+    document.getElementById('snapshotRatio').textContent = adminPct + '%';
+}
+
+function roleBadge(role) {
+    if (role === 'admin') {
+        return '<span class="ap-pill role-admin"><span class="dot"></span>Admin</span>';
+    }
+    return '<span class="ap-pill role-user"><span class="dot"></span>User</span>';
+}
+
+function renderRecentUsers(users) {
+    const tbody = document.getElementById('recentUsersTableBody');
+    const emptyState = document.getElementById('recentUsersEmptyState');
+    tbody.innerHTML = '';
+
+    if (!users.length) {
+        emptyState.classList.remove('d-none');
+        return;
+    }
+
+    emptyState.classList.add('d-none');
+
+    users.slice(0, 6).forEach(function (user) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="font-weight-bold small">${escapeHtml(user.name || '—')}</td>
+            <td class="small" style="color: var(--text-muted);">@${escapeHtml(user.username || '—')}</td>
+            <td class="small" style="color: var(--text-muted);">${escapeHtml(user.email || '—')}</td>
+            <td>${roleBadge(user.role)}</td>
+            <td class="small" style="color: var(--text-muted);">${escapeHtml(formatDate(user.created_at))}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderUserTable(usersToRender) {
+    const tbody = document.getElementById('userTableBody');
+    const emptyState = document.getElementById('userEmptyState');
+    const currentUserId = Number(document.body.dataset.currentUserId || 0);
+
+    tbody.innerHTML = '';
+
+    if (!usersToRender.length) {
+        emptyState.classList.remove('d-none');
+        return;
+    }
+
+    emptyState.classList.add('d-none');
+
+    usersToRender.forEach(function (user) {
+        const isCurrentAdmin = currentUserId === Number(user.id);
+        const tr = document.createElement('tr');
+        tr.className = 'align-middle';
+        tr.innerHTML = `
+            <td class="small font-weight-bold" style="color: var(--text-muted);">${escapeHtml(user.id)}</td>
+            <td class="font-weight-bold small">${escapeHtml(user.name)}</td>
+            <td class="small" style="color: var(--text-muted);">@${escapeHtml(user.username)}</td>
+            <td class="small" style="color: var(--text-muted);">${escapeHtml(user.email)}</td>
+            <td>${roleBadge(user.role)}</td>
+            <td class="text-right">
+                <button onclick="openEditModal(${Number(user.id)})" class="ap-icon-btn mr-1" title="Edit User">
+                    <span class="material-symbols-outlined" style="color: var(--ink-soft);">edit</span>
+                </button>
+                <button onclick="promptDeleteUser(${Number(user.id)})" class="ap-icon-btn ${isCurrentAdmin ? 'disabled' : ''}" style="${isCurrentAdmin ? 'opacity:0.5;' : ''}" ${isCurrentAdmin ? 'disabled' : ''} title="${isCurrentAdmin ? 'Cannot delete current logged-in admin' : 'Delete User'}">
+                    <span class="material-symbols-outlined text-danger">delete</span>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderAll() {
+    renderUserTable(adminUsers);
+}
+
+async function loadAdminUsers() {
+    try {
+        const data = await window.apiGet('/api/admin/users');
+        adminUsers = Array.isArray(data.users) ? data.users : [];
+        renderOverviewStats(data.stats);
+        renderRecentUsers(adminUsers);
+        renderAll();
+    } catch (error) {
+        if (window.showToast) {
+            window.showToast('Could not load users', error.message, 'error');
+        }
+    }
+}
+
+function openEditModal(userId) {
+    const user = adminUsers.find(function (item) {
+        return Number(item.id) === Number(userId);
+    });
+
+    if (!user) return;
+
+    document.getElementById('editUserId').value = user.id;
+    document.getElementById('editName').value = user.name || '';
+    document.getElementById('editUsername').value = user.username || '';
+    document.getElementById('editEmail').value = user.email || '';
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editPassword').required = false;
+    document.getElementById('editRole').value = user.role || 'user';
+    document.getElementById('editUserModalLabel').textContent = 'Edit User Details';
+    $('#editUserModal').modal('show');
+}
+
+function openAddUserModal() {
+    document.getElementById('editUserId').value = '';
+    document.getElementById('editName').value = '';
+    document.getElementById('editUsername').value = '';
+    document.getElementById('editEmail').value = '';
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editPassword').required = true;
+    document.getElementById('editRole').value = 'user';
+    document.getElementById('editUserModalLabel').textContent = 'Add New User Account';
+    $('#editUserModal').modal('show');
+}
+
+function promptDeleteUser(userId) {
+    const currentUserId = Number(document.body.dataset.currentUserId || 0);
+
+    if (Number(userId) === currentUserId) {
+        window.showToast('Action Denied', 'You cannot delete your own active admin account.', 'error');
+        return;
+    }
+
+    const user = adminUsers.find(function (item) {
+        return Number(item.id) === Number(userId);
+    });
+
+    if (!user) return;
+
+    pendingDeleteUserId = Number(userId);
+    document.getElementById('deleteModalUserName').textContent =
+        `Account: ${user.name} (@${user.username} - ${user.email})`;
+    $('#deleteUserModal').modal('show');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.dataset.currentUserId = '{{ current_user.id }}';
+    loadAdminUsers();
+
+    const searchInput = document.getElementById('adminUserSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            if (!query) {
+                renderAll();
+                return;
+            }
+
+            const filtered = adminUsers.filter(function (user) {
+                return String(user.name || '').toLowerCase().includes(query) ||
+                    String(user.username || '').toLowerCase().includes(query) ||
+                    String(user.email || '').toLowerCase().includes(query);
+            });
+            renderUserTable(filtered);
+        });
+    }
+
+    const editForm = document.getElementById('editUserForm');
+    if (editForm) {
+        editForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const id = document.getElementById('editUserId').value;
+            const payload = {
+                name: document.getElementById('editName').value.trim(),
+                username: document.getElementById('editUsername').value.trim(),
+                email: document.getElementById('editEmail').value.trim(),
+                password: document.getElementById('editPassword').value,
+                role: document.getElementById('editRole').value
+            };
+
+            setLoading(true);
+
+            try {
+                if (id) {
+                    const result = await fetch('/api/admin/users/' + encodeURIComponent(id), {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload)
+                    }).then(function (response) {
+                        return response.json().then(function (data) {
+                            if (!response.ok) throw new Error(data.error || 'Update failed.');
+                            return data;
+                        });
+                    });
+
+                    window.showToast('User Updated', result.message, 'success');
+                } else {
+                    const result = await window.apiPost('/api/admin/users', payload);
+                    window.showToast('User Created', result.message, 'success');
+                }
+
+                $('#editUserModal').modal('hide');
+                await loadAdminUsers();
+            } catch (error) {
+                window.showToast('Action Failed', error.message, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+    }
+
+    const confirmDeleteBtn = document.getElementById('confirmDeleteUserBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', async function () {
+            if (!pendingDeleteUserId) return;
+
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/admin/users/' + encodeURIComponent(pendingDeleteUserId), {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'same-origin'
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Delete failed.');
+                }
+
+                $('#deleteUserModal').modal('hide');
+                window.showToast('User Deleted', data.message, 'info');
+                pendingDeleteUserId = null;
+                await loadAdminUsers();
+            } catch (error) {
+                window.showToast('Delete Failed', error.message, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

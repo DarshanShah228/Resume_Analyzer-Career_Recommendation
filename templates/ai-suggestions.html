@@ -1,0 +1,528 @@
+{% extends "base.html" %}
+
+{% block title %}AI Career Coach - CareerAI Intelligence{% endblock %}
+
+{% block content %}
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-light d-lg-none mr-3 border-custom" type="button" id="mobileNavToggler">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+                <h5 class="mb-0 font-weight-bold">AI Career Coach</h5>
+                <small class="text-muted d-none d-sm-inline">Your personalized roadmap from resume analysis to job readiness</small>
+            </div>
+        </div>
+        <span class="badge badge-pill-custom badge-primary-soft d-none d-md-inline">
+            <span class="material-symbols-outlined mr-1 align-middle" style="font-size:16px;">auto_awesome</span>
+            AI Powered
+        </span>
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+    <div class="mx-auto" style="max-width:1080px;">
+
+        <section class="card-elevation-1 p-4 p-md-5 mb-4" style="background:linear-gradient(135deg,#ffffff,#e9edff);">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge badge-pill-custom badge-primary-soft">
+                            <span class="material-symbols-outlined mr-1 align-middle" style="font-size:16px;">psychology</span>
+                            Career Intelligence
+                        </span>
+                    </div>
+                    <h1 class="h3 font-weight-bold text-on-surface mb-2">What should you do next?</h1>
+                    <p class="text-muted mb-0" style="max-width:700px;">
+                        Turn your resume analysis and skill gaps into practical actions, stronger resume content, and a focused career roadmap.
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-3 rounded-lg border-custom bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small text-muted font-weight-bold">TARGET ROLE</span>
+                            <span class="material-symbols-outlined text-primary-custom" style="font-size:20px;">work</span>
+                        </div>
+                        <h5 class="font-weight-bold mb-1" id="targetRole">Loading...</h5>
+                        <div class="small text-muted">Your plan is based on your career analysis.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row mb-4">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="small text-muted font-weight-bold text-uppercase">Career Readiness</div>
+                            <div class="h2 font-weight-bold mb-0" id="readinessScore">—</div>
+                        </div>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:58px;height:58px;background:#eef0ff;">
+                            <span class="material-symbols-outlined text-primary-custom" style="font-size:30px;">target</span>
+                        </div>
+                    </div>
+                    <div class="progress mb-3" style="height:8px;">
+                        <div id="readinessBar" class="progress-bar" role="progressbar" style="width:0%;"></div>
+                    </div>
+                    <p class="small text-muted mb-0" id="readinessText">Run your Skill Gap analysis to calculate role readiness.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card-elevation-1 p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="material-symbols-outlined text-primary-custom mr-2">priority_high</span>
+                        <div>
+                            <h5 class="h6 font-weight-bold mb-0">Top Priorities</h5>
+                            <small class="text-muted">Focus on the highest-value improvements first.</small>
+                        </div>
+                    </div>
+                    <div id="priorityList">
+                        <div class="p-3 bg-surface-low rounded-lg border-custom small text-muted">Loading your priority skills...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+                <div class="mb-2 mb-md-0">
+                    <h5 class="h6 font-weight-bold mb-1 d-flex align-items-center">
+                        <span class="material-symbols-outlined text-primary-custom mr-2">bolt</span>
+                        Your Action Center
+                    </h5>
+                    <small class="text-muted">Practical actions to strengthen your profile.</small>
+                </div>
+                <span class="badge badge-pill-custom badge-secondary-soft">Recommended</span>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 h-100 bg-surface-low rounded-lg border-custom">
+                        <span class="material-symbols-outlined text-primary-custom mb-2">description</span>
+                        <h6 class="font-weight-bold mb-1">Improve Resume Bullets</h6>
+                        <p class="small text-muted mb-0">Turn weak descriptions into clear, impact-focused resume bullets with the AI enhancer below.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 h-100 bg-surface-low rounded-lg border-custom">
+                        <span class="material-symbols-outlined text-secondary-custom mb-2">compare_arrows</span>
+                        <h6 class="font-weight-bold mb-1">Compare With a JD</h6>
+                        <p class="small text-muted mb-0">Find missing skills and keywords by comparing your resume with a real job description.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 h-100 bg-surface-low rounded-lg border-custom">
+                        <span class="material-symbols-outlined text-success mb-2">link</span>
+                        <h6 class="font-weight-bold mb-1">Build Stronger Evidence</h6>
+                        <p class="small text-muted mb-0">Strengthen projects, technical skills, GitHub work, and measurable achievements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-2 p-4 mb-4 border-custom">
+            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+                <div class="mb-2 mb-md-0">
+                    <h5 class="h6 font-weight-bold text-on-surface mb-1 d-flex align-items-center">
+                        <span class="material-symbols-outlined text-primary-custom mr-2">edit_note</span>
+                        AI Resume Bullet Enhancer
+                    </h5>
+                    <small class="text-muted">Improve your wording while keeping the content based on your actual experience.</small>
+                </div>
+                <span class="badge badge-pill-custom badge-tertiary-soft">Live Tool</span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="bulletInput" class="small font-weight-bold text-muted">Your Draft Bullet</label>
+                <textarea class="form-control border-custom" id="bulletInput" rows="3" maxlength="500"
+                    placeholder="Example: Built REST APIs using Python and Django for a backend application">Built REST APIs using Python and Django for backend application</textarea>
+                <div class="d-flex justify-content-between mt-1">
+                    <small class="text-muted">Keep it factual and based on your actual work.</small>
+                    <small class="text-muted"><span id="bulletCount">0</span>/500</small>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap mb-3">
+                <button type="button" onclick="runEnhance()" class="btn btn-careerai-primary mr-2 mb-2" id="enhanceBtn">
+                    <span class="material-symbols-outlined mr-1 align-middle" style="font-size:18px;">auto_awesome</span>
+                    Enhance Bullet
+                </button>
+                <button type="button" onclick="clearBullet()" class="btn btn-light border-custom mb-2">Clear</button>
+            </div>
+
+            <div id="bulletResultBox" class="p-3 bg-surface-low rounded-lg border-custom">
+                <div class="row">
+                    <div class="col-md-6 mb-3 mb-md-0 border-right-md border-subtle">
+                        <small class="font-weight-bold text-muted text-uppercase tracking-wider d-block mb-2">Before</small>
+                        <p class="small text-dark mb-0" id="origBulletText">Your original bullet will appear here.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="font-weight-bold text-success text-uppercase tracking-wider d-block mb-2">AI Enhanced</small>
+                        <p class="small text-dark font-weight-bold mb-2" id="enhancedBulletText">Your enhanced bullet will appear here.</p>
+                        <button type="button" onclick="copyEnhancedText()" class="btn btn-sm btn-outline-success py-1 px-3" id="copyBtn" disabled>
+                            <span class="material-symbols-outlined mr-1 align-middle" style="font-size:14px;">content_copy</span>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <span class="material-symbols-outlined text-secondary-custom mr-2">rocket_launch</span>
+                <div>
+                    <h5 class="h6 font-weight-bold mb-0">Recommended Portfolio Project</h5>
+                    <small class="text-muted">Build proof of the skills that matter for your target role.</small>
+                </div>
+            </div>
+            <div class="p-4 bg-surface-low rounded-lg border-custom">
+                <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                    <div>
+                        <span class="badge badge-pill-custom badge-primary-soft mb-2" id="projectLevel">AI Recommended</span>
+                        <h5 class="font-weight-bold mb-1" id="projectTitle">Role-Focused Portfolio Project</h5>
+                    </div>
+                    <span class="material-symbols-outlined text-primary-custom" style="font-size:32px;">folder_special</span>
+                </div>
+                <p class="small text-muted mb-3" id="projectDescription">Build a practical project that demonstrates your target-role skills and addresses an important skill gap.</p>
+                <div id="projectSkills" class="d-flex flex-wrap"></div>
+                <div class="mt-3">
+                    <a href="{{ url_for('main.skill_gap') }}" class="btn btn-sm btn-light border-custom mr-2">View Skill Gap</a>
+                    <a href="{{ url_for('main.compare_jd') }}" class="btn btn-sm btn-careerai-primary">Compare a JD</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4 mb-4">
+            <div class="d-flex align-items-center mb-4">
+                <span class="material-symbols-outlined text-primary-custom mr-2">map</span>
+                <div>
+                    <h5 class="h6 font-weight-bold mb-0">30-Day Career Roadmap</h5>
+                    <small class="text-muted">A focused sequence for becoming more job-ready.</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 bg-surface-low rounded-lg border-custom h-100">
+                        <div class="small font-weight-bold text-primary-custom text-uppercase mb-2">Week 1</div>
+                        <h6 class="font-weight-bold">Fix the Resume</h6>
+                        <p class="small text-muted mb-0">Improve weak bullets, add genuine measurable impact, and align your skills with your target role.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 bg-surface-low rounded-lg border-custom h-100">
+                        <div class="small font-weight-bold text-primary-custom text-uppercase mb-2">Week 2</div>
+                        <h6 class="font-weight-bold">Close Priority Gaps</h6>
+                        <p class="small text-muted mb-0">Choose one or two important missing skills and practice them through focused hands-on tasks.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 bg-surface-low rounded-lg border-custom h-100">
+                        <div class="small font-weight-bold text-secondary-custom text-uppercase mb-2">Week 3</div>
+                        <h6 class="font-weight-bold">Build Proof</h6>
+                        <p class="small text-muted mb-0">Build or improve a portfolio project that demonstrates the skills employers need.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 bg-surface-low rounded-lg border-custom h-100">
+                        <div class="small font-weight-bold text-success text-uppercase mb-2">Week 4</div>
+                        <h6 class="font-weight-bold">Prepare & Apply</h6>
+                        <p class="small text-muted mb-0">Compare your resume with real JDs, practice interviews, and apply where your fit is strongest.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-elevation-1 p-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <div class="mb-3 mb-md-0">
+                    <h5 class="h6 font-weight-bold mb-1">Continue Your Career Analysis</h5>
+                    <small class="text-muted">Use the other CareerAI tools to keep improving your profile.</small>
+                </div>
+                <div>
+                    <a href="{{ url_for('main.skill_gap') }}" class="btn btn-light border-custom mr-2 mb-2">Skill Gap</a>
+                    <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-primary mb-2">Compare JD</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    "use strict";
+
+    const bulletInput = document.getElementById("bulletInput");
+    const bulletCount = document.getElementById("bulletCount");
+    const enhanceBtn = document.getElementById("enhanceBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const originalText = document.getElementById("origBulletText");
+    const enhancedText = document.getElementById("enhancedBulletText");
+
+    function updateBulletCount() {
+        if (bulletInput && bulletCount) {
+            bulletCount.textContent = bulletInput.value.length;
+        }
+    }
+
+    if (bulletInput) {
+        bulletInput.addEventListener("input", updateBulletCount);
+        updateBulletCount();
+    }
+
+    window.clearBullet = function () {
+        if (!bulletInput) return;
+        bulletInput.value = "";
+        updateBulletCount();
+        originalText.textContent = "Your original bullet will appear here.";
+        enhancedText.textContent = "Your enhanced bullet will appear here.";
+        if (copyBtn) copyBtn.disabled = true;
+    };
+
+    window.runEnhance = function () {
+        const value = bulletInput ? bulletInput.value.trim() : "";
+        if (!value) {
+            if (window.showToast) window.showToast("Input Required", "Please enter a resume bullet point first.", "info");
+            if (bulletInput) bulletInput.focus();
+            return;
+        }
+
+        if (enhanceBtn) {
+            enhanceBtn.disabled = true;
+            enhanceBtn.innerHTML = '<span class="material-symbols-outlined mr-1 align-middle" style="font-size:18px;">progress_activity</span> Enhancing...';
+        }
+
+        window.apiPost("/api/enhance-bullet", { text: value })
+            .then(function (result) {
+                originalText.textContent = result.original || value;
+                enhancedText.textContent = result.enhanced || "No enhanced version was returned.";
+                if (copyBtn) copyBtn.disabled = !result.enhanced;
+                if (window.showToast) window.showToast("Bullet Enhanced", "Your resume bullet has been improved.", "success");
+            })
+            .catch(function (err) {
+                if (window.showToast) window.showToast("Enhancement Failed", err.message || "Unable to enhance the bullet point.", "error");
+            })
+            .finally(function () {
+                if (enhanceBtn) {
+                    enhanceBtn.disabled = false;
+                    enhanceBtn.innerHTML = '<span class="material-symbols-outlined mr-1 align-middle" style="font-size:18px;">auto_awesome</span> Enhance Bullet';
+                }
+            });
+    };
+
+    window.copyEnhancedText = function () {
+        const text = enhancedText ? enhancedText.textContent.trim() : "";
+        if (!text || text === "Your enhanced bullet will appear here.") return;
+
+        navigator.clipboard.writeText(text)
+            .then(function () {
+                if (window.showToast) window.showToast("Copied", "Enhanced bullet copied to clipboard.", "success");
+            })
+            .catch(function () {
+                if (window.showToast) window.showToast("Copy Failed", "Unable to copy the enhanced text.", "error");
+            });
+    };
+
+    function setText(id, value, fallback) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value || fallback;
+    }
+
+    function renderPriorities(items) {
+        const container = document.getElementById("priorityList");
+        if (!container) return;
+
+        if (!Array.isArray(items) || items.length === 0) {
+            container.innerHTML = '<div class="p-3 bg-surface-low rounded-lg border-custom small text-muted">No priority skill gaps are available yet. Run Skill Gap analysis for your target role.</div>';
+            return;
+        }
+
+        container.innerHTML = items.slice(0, 4).map(function (item, index) {
+            const skill = typeof item === "string" ? item : (item.skill || item.name || "Skill");
+            const recommendation = typeof item === "string" ? "" : (item.recommendation || item.reason || "");
+            const priority = typeof item === "string" ? (index === 0 ? "High" : "Medium") : (item.priority || (index === 0 ? "High" : "Medium"));
+
+            return '<div class="d-flex align-items-start p-3 bg-surface-low rounded-lg border-custom mb-2">' +
+                '<div class="mr-3 font-weight-bold text-primary-custom" style="min-width:24px;">' + (index + 1) + '</div>' +
+                '<div class="flex-grow-1">' +
+                '<div class="d-flex justify-content-between align-items-center flex-wrap">' +
+                '<strong class="small text-dark">' + skill + '</strong>' +
+                '<span class="badge badge-pill-custom ' + (priority.toLowerCase() === "high" ? "badge-danger" : "badge-warning") + '">' + priority + '</span>' +
+                '</div>' +
+                '<div class="small text-muted mt-1">' + (recommendation || "Strengthen this skill through focused practice or a practical project.") + '</div>' +
+                '</div></div>';
+        }).join("");
+    }
+
+    function renderProject(project, role, priorities) {
+        if (!project) {
+            const firstSkill = priorities && priorities.length
+                ? (typeof priorities[0] === "string" ? priorities[0] : priorities[0].skill)
+                : null;
+            project = {
+                title: role ? role + " Portfolio Project" : "Role-Focused Portfolio Project",
+                description: "Build a practical project that demonstrates your target-role skills and addresses your highest-priority gap.",
+                skills: firstSkill ? [firstSkill] : []
+            };
+        }
+
+        setText("projectTitle", project.title, "Role-Focused Portfolio Project");
+        setText("projectDescription", project.description, "Build a practical project that demonstrates your skills.");
+        setText("projectLevel", project.level, "Career Building");
+
+        const skillsContainer = document.getElementById("projectSkills");
+        if (skillsContainer) {
+            const skills = Array.isArray(project.skills) ? project.skills : [];
+            skillsContainer.innerHTML = skills.map(function (skill) {
+                return '<span class="badge badge-pill-custom badge-primary-soft mr-1 mb-1">' + skill + '</span>';
+            }).join("");
+        }
+    }
+
+    function setReadiness(score) {
+        const numericScore = Number(score);
+        if (!Number.isFinite(numericScore)) return;
+
+        const safeScore = Math.max(0, Math.min(100, Math.round(numericScore)));
+        setText("readinessScore", safeScore + "%", "—");
+
+        const bar = document.getElementById("readinessBar");
+        if (bar) bar.style.width = safeScore + "%";
+
+        let message = "Keep building evidence for your target role.";
+        if (safeScore >= 80) message = "Strong profile. Focus on polishing and interview readiness.";
+        else if (safeScore >= 60) message = "Good foundation. Close the most important skill gaps next.";
+        else if (safeScore >= 40) message = "You have a foundation, but targeted improvements can raise your fit.";
+        else message = "Start with the highest-priority gaps and strengthen your core resume evidence.";
+
+        setText("readinessText", message, "Your readiness score is being calculated.");
+    }
+
+    function normalizePriorityItems(data) {
+        if (!data) return [];
+        const source = data.missing_skills || data.priority_skills || data.gaps || data.priority_gaps || [];
+        if (!Array.isArray(source)) return [];
+        return source.map(function (item) {
+            if (typeof item === "string") {
+                return { skill: item, priority: "High", recommendation: "" };
+            }
+            return {
+                skill: item.skill || item.name || item.title || "Skill",
+                priority: item.priority || item.level || "High",
+                recommendation: item.recommendation || item.reason || item.description || ""
+            };
+        });
+    }
+
+    function buildProject(roleTitle, priorities) {
+        const role = (roleTitle || "").toLowerCase();
+        const skills = priorities.slice(0, 3).map(function (item) { return item.skill; });
+
+        if (role.includes("python") || role.includes("backend")) {
+            return {
+                title: "Job Application Tracker API",
+                description: "Build a practical backend application with authentication, REST APIs, database integration, search, and deployment. This gives you evidence for backend development skills.",
+                skills: skills.length ? skills : ["Python", "REST APIs", "SQL"]
+            };
+        }
+
+        if (role.includes("frontend") || role.includes("react")) {
+            return {
+                title: "Job Search Dashboard",
+                description: "Build a responsive dashboard that consumes a REST API, manages application state, filters jobs, and presents useful analytics.",
+                skills: skills.length ? skills : ["React", "JavaScript", "REST APIs"]
+            };
+        }
+
+        if (role.includes("data analyst")) {
+            return {
+                title: "Placement Data Analytics Dashboard",
+                description: "Analyze a realistic placement dataset, clean the data, create meaningful visualizations, and present insights through an interactive dashboard.",
+                skills: skills.length ? skills : ["Python", "SQL", "Data Visualization"]
+            };
+        }
+
+        if (role.includes("data scientist") || role.includes("machine learning")) {
+            return {
+                title: "End-to-End ML Prediction System",
+                description: "Build a complete machine-learning project from data preparation and feature engineering to model evaluation and a simple prediction API.",
+                skills: skills.length ? skills : ["Python", "Machine Learning", "Pandas"]
+            };
+        }
+
+        if (role.includes("mobile")) {
+            return {
+                title: "Career Companion Mobile App",
+                description: "Build a mobile application that tracks applications, interview preparation, and job progress while consuming a backend API.",
+                skills: skills.length ? skills : ["Flutter", "REST APIs", "Firebase"]
+            };
+        }
+
+        return {
+            title: roleTitle ? roleTitle + " Portfolio Project" : "Career Portfolio Project",
+            description: "Build a practical project that demonstrates your target-role skills and closes your most important skill gaps.",
+            skills: skills.length ? skills : ["Project Development"]
+        };
+    }
+
+    function renderDynamicPlan(data, resumeData) {
+        data = data || {};
+        resumeData = resumeData || {};
+
+        const role = data.role || {};
+        const roleTitle = role.title || data.title || data.target_role || resumeData.target_role || "Your Target Role";
+        const priorities = normalizePriorityItems(data);
+
+        setText("targetRole", roleTitle, "Your Target Role");
+
+        const score = data.role_fit_score ?? data.fit_score ?? data.match_score ?? data.readiness_score ?? resumeData.role_fit_score;
+        if (score !== undefined && score !== null) {
+            setReadiness(score);
+        }
+
+        renderPriorities(priorities);
+
+        const project = data.recommended_project || data.project || buildProject(roleTitle, priorities);
+        renderProject(project, roleTitle, priorities);
+    }
+
+    function loadCareerData() {
+        if (!window.apiGet) {
+            setText("targetRole", "Career Plan", "Career Plan");
+            renderPriorities([]);
+            renderProject(null, null, []);
+            return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const roleId = params.get("role") || params.get("role_id");
+        const endpoint = "/api/skill-gap" + (roleId ? "?role_id=" + encodeURIComponent(roleId) : "");
+
+        Promise.allSettled([
+            window.apiGet(endpoint),
+            window.apiGet("/api/resume/latest")
+        ]).then(function (results) {
+            const gapData = results[0].status === "fulfilled" ? results[0].value : {};
+            const resumeData = results[1].status === "fulfilled" ? results[1].value : {};
+
+            renderDynamicPlan(gapData, resumeData);
+
+            if (results[0].status !== "fulfilled") {
+                renderPriorities([]);
+            }
+        }).catch(function () {
+            setText("targetRole", "Career Plan", "Career Plan");
+            renderPriorities([]);
+            renderProject(null, null, []);
+        });
+    }
+
+    loadCareerData();
+})();
+</script>
+{% endblock %}

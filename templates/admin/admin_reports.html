@@ -1,0 +1,323 @@
+{% extends "admin/admin.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_reports.css') }}">
+
+<div class="reports-page">
+
+    <div class="reports-header">
+        <div>
+            <h1>Reports & Analytics</h1>
+            <p>System-wide resume, skills, career and job description analytics.</p>
+        </div>
+        <div class="report-actions">
+            <button type="button" onclick="window.print()" class="btn btn-primary">
+                Print / Save PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <form method="GET" action="{{ url_for('main.admin_reports') }}">
+
+            <div class="filter-group">
+                <label for="period">Date Range</label>
+                <select id="period" name="period">
+                    <option value="7" {% if selected_period == "7" %}selected{% endif %}>Last 7 Days</option>
+                    <option value="30" {% if selected_period == "30" %}selected{% endif %}>Last 30 Days</option>
+                    <option value="90" {% if selected_period == "90" %}selected{% endif %}>Last 90 Days</option>
+                    <option value="365" {% if selected_period == "365" %}selected{% endif %}>Last Year</option>
+                    <option value="all" {% if selected_period == "all" %}selected{% endif %}>All Time</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="job_role">Career Role</label>
+                <select id="job_role" name="job_role">
+                    <option value="all">All Roles</option>
+                    {% for role in all_roles %}
+                    <option value="{{ role }}" {% if selected_role == role %}selected{% endif %}>{{ role }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="apply-btn">Apply Filters</button>
+        </form>
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+                <span class="stat-title">Total Users</span>
+                <strong>{{ total_users }}</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div>
+                <span class="stat-title">Resumes Uploaded</span>
+                <strong>{{ total_resumes }}</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div>
+                <span class="stat-title">Resumes Analyzed</span>
+                <strong>{{ total_analyzed }}</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🔍</div>
+            <div>
+                <span class="stat-title">JD Comparisons</span>
+                <strong>{{ total_comparisons }}</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💼</div>
+            <div>
+                <span class="stat-title">Recommendations</span>
+                <strong>{{ total_recommendations }}</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div>
+                <span class="stat-title">Average Resume Score</span>
+                <strong>{{ avg_resume_score }}%</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>Resume Score Distribution</h2>
+                <span>Performance of analyzed resumes</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="resumeScoreChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>JD Match Distribution</h2>
+                <span>Resume vs Job Description</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="jdMatchChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>Top Career Recommendations</h2>
+                <span>Most frequently recommended career roles</span>
+            </div>
+            <div class="chart-container large-chart">
+                <canvas id="careerChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>Top Skill Gaps</h2>
+                <span>Most frequently missing skills</span>
+            </div>
+            <div class="chart-container large-chart">
+                <canvas id="skillGapChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="summary-card">
+        <div>
+            <h2>JD Matching Overview</h2>
+            <p>Average Resume-to-JD Match Score</p>
+        </div>
+        <div class="match-score">{{ avg_jd_match }}%</div>
+    </div>
+
+    <div class="report-footer">
+        <span>CareerAI Admin Reports</span>
+        <span>Generated automatically</span>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script id="report-data" type="application/json">
+{
+    "scoreLabels": {{ score_labels | tojson }},
+    "scoreCounts": {{ score_counts | tojson }},
+    "matchLabels": {{ match_labels | tojson }},
+    "matchCounts": {{ match_counts | tojson }},
+    "roleLabels": {{ role_labels | tojson }},
+    "roleCounts": {{ role_counts | tojson }},
+    "skillLabels": {{ skill_labels | tojson }},
+    "skillCounts": {{ skill_counts | tojson }}
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const reportDataElement = document.getElementById("report-data");
+
+    if (!reportDataElement) {
+        console.error("Report data element not found.");
+        return;
+    }
+
+    const reportData = JSON.parse(reportDataElement.textContent);
+
+    const scoreLabels = reportData.scoreLabels;
+    const scoreCounts = reportData.scoreCounts;
+    const matchLabels = reportData.matchLabels;
+    const matchCounts = reportData.matchCounts;
+    const roleLabels = reportData.roleLabels;
+    const roleCounts = reportData.roleCounts;
+    const skillLabels = reportData.skillLabels;
+    const skillCounts = reportData.skillCounts;
+
+    const resumeScoreCanvas = document.getElementById("resumeScoreChart");
+
+    if (resumeScoreCanvas) {
+        new Chart(resumeScoreCanvas, {
+            type: "bar",
+            data: {
+                labels: scoreLabels,
+                datasets: [{
+                    label: "Number of Resumes",
+                    data: scoreCounts,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const jdMatchCanvas = document.getElementById("jdMatchChart");
+
+    if (jdMatchCanvas) {
+        new Chart(jdMatchCanvas, {
+            type: "doughnut",
+            data: {
+                labels: matchLabels,
+                datasets: [{
+                    label: "JD Matches",
+                    data: matchCounts,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    }
+
+    const careerCanvas = document.getElementById("careerChart");
+
+    if (careerCanvas) {
+        new Chart(careerCanvas, {
+            type: "bar",
+            data: {
+                labels: roleLabels,
+                datasets: [{
+                    label: "Recommendations",
+                    data: roleCounts,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const skillGapCanvas = document.getElementById("skillGapChart");
+
+    if (skillGapCanvas) {
+        new Chart(skillGapCanvas, {
+            type: "bar",
+            data: {
+                labels: skillLabels,
+                datasets: [{
+                    label: "Occurrences",
+                    data: skillCounts,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

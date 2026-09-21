@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block title %}JD Comparison Results - CareerAI Match Engine{% endblock %}
+{% block content %}
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-light d-lg-none mr-3 border-custom" type="button" id="mobileNavToggler">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+                <h5 class="mb-0 font-weight-bold">JD Comparison Results</h5>
+                <small class="text-muted d-none d-sm-inline">See your resume skills and JD skills side by side</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('main.compare_jd') }}" class="btn btn-sm btn-careerai-secondary">Compare Another JD</a>
+            <a href="{{ url_for('main.ai_suggestions') }}" class="btn btn-sm btn-careerai-primary">
+                <span class="material-symbols-outlined mr-1" style="font-size:16px;">auto_awesome</span>
+                Improve Resume
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+    <div id="resultLoading" class="card-elevation-1 p-5 text-center mb-4">
+        <div class="spinner-border text-primary-custom mb-3"></div>
+        <p class="small text-muted mb-0">Loading your latest comparison...</p>
+    </div>
+
+    <div id="resultContent" class="d-none">
+        <div class="card-elevation-1 p-4 mb-4">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-8">
+                    <span class="badge badge-pill-custom badge-primary-soft mb-2" id="resSourceBadge">JD Comparison</span>
+                    <h3 class="h4 font-weight-bold text-on-surface mb-1" id="resJdTitle">—</h3>
+                    <p class="small text-muted mb-1">
+                        Compared against resume: <strong id="resResumeName">—</strong>
+                    </p>
+                    <p class="small text-muted mb-0" id="resComparedAt"></p>
+                </div>
+                <div class="col-md-4 text-md-right">
+                    <div class="d-inline-flex align-items-center p-3 bg-surface-low rounded-lg border-custom">
+                        <div class="text-left mr-3">
+                            <span class="small font-weight-bold text-muted d-block">Overall Fit Score</span>
+                            <strong class="h4 font-weight-bold text-tertiary-custom mb-0" id="resOverallScore">—</strong>
+                        </div>
+                        <span class="material-symbols-outlined text-tertiary-custom" style="font-size:36px;">task_alt</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gy-4 mb-4">
+            <div class="col-md-6">
+                <div class="card-elevation-1 p-4 h-100" style="border-top:4px solid var(--color-tertiary-container);">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="h6 font-weight-bold text-success mb-0 d-flex align-items-center">
+                            <span class="material-symbols-outlined mr-2">person</span>
+                            Your Resume Skills
+                        </h5>
+                        <span class="badge badge-pill-custom badge-tertiary-soft" id="resResumeSkillsCount">0</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2" id="resResumeSkillsContainer"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-elevation-1 p-4 h-100" style="border-top:4px solid var(--color-primary);">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="h6 font-weight-bold text-primary-custom mb-0 d-flex align-items-center">
+                            <span class="material-symbols-outlined mr-2">work</span>
+                            JD Extracted Skills
+                        </h5>
+                        <span class="badge badge-pill-custom badge-primary-soft" id="resJdSkillsCount">0</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2" id="resJdSkillsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gy-4 mb-4">
+            <div class="col-md-6">
+                <div class="card-elevation-1 p-4 h-100" style="border-top:4px solid var(--color-tertiary-container);">
+                    <h5 class="h6 font-weight-bold text-success mb-3 d-flex align-items-center">
+                        <span class="material-symbols-outlined mr-2">check_circle</span>
+                        Matched Skills (<span id="resMatchedCount">0</span>)
+                    </h5>
+                    <div class="d-flex flex-wrap gap-2" id="resMatchedContainer"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-elevation-1 p-4 h-100" style="border-top:4px solid var(--color-error);">
+                    <h5 class="h6 font-weight-bold text-danger mb-3 d-flex align-items-center">
+                        <span class="material-symbols-outlined mr-2">warning</span>
+                        Missing JD Skills (<span id="resMissingCount">0</span>)
+                    </h5>
+                    <div class="d-flex flex-wrap gap-2" id="resMissingContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-elevation-1 p-4 mb-4">
+            <h5 class="h6 font-weight-bold text-on-surface mb-3 d-flex align-items-center">
+                <span class="material-symbols-outlined text-primary-custom mr-2">lightbulb</span>
+                Tailored AI Optimization Recommendations
+            </h5>
+            <div id="recommendationsContainer"></div>
+        </div>
+
+        <div class="card-elevation-1 p-4 p-md-5 text-center bg-surface-low rounded-xl">
+            <h4 class="h5 font-weight-bold text-on-surface mb-2">Ready to improve your match?</h4>
+            <p class="small text-muted mb-4 mx-auto" style="max-width:560px;">
+                Use the missing JD skills and recommendations above to strengthen your resume, then compare it with the JD again.
+            </p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3">
+                <a href="{{ url_for('main.ai_suggestions') }}" class="btn btn-careerai-primary btn-sm px-4 py-2 font-weight-bold">
+                    AI Resume Suggestions →
+                </a>
+                <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-secondary btn-sm px-4 py-2 font-weight-bold">
+                    Compare Again →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultError" class="card-elevation-1 p-5 text-center d-none">
+        <span class="material-symbols-outlined text-danger" style="font-size:48px;">error</span>
+        <h4 class="h5 font-weight-bold mt-3">No comparison results found</h4>
+        <p class="small text-muted mb-4">Run a JD comparison first to see your results here.</p>
+        <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-primary">Go to Compare JD →</a>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const loading = document.getElementById('resultLoading');
+    const content = document.getElementById('resultContent');
+    const error = document.getElementById('resultError');
+
+    function valueOrDash(value) {
+        return value === undefined || value === null || value === '' ? '—' : value;
+    }
+
+    function scoreText(value) {
+        if (value === undefined || value === null || value === '') {
+            return '—';
+        }
+        const number = Number(value);
+        return Number.isFinite(number) ? Math.round(number) + '%' : value;
+    }
+
+    function renderSkillChips(containerId, countId, items, type) {
+        const container = document.getElementById(containerId);
+        const count = document.getElementById(countId);
+        container.innerHTML = '';
+
+        const skills = Array.isArray(items)
+            ? [...new Set(items.filter(Boolean).map(String))]
+            : [];
+
+        count.textContent = skills.length;
+
+        if (!skills.length) {
+            const empty = document.createElement('span');
+            empty.className = 'small text-muted';
+            empty.textContent = type === 'resume'
+                ? 'No resume skills found.'
+                : 'No skills were extracted from the JD.';
+            container.appendChild(empty);
+            return;
+        }
+
+        skills.forEach(function (skill) {
+            const span = document.createElement('span');
+            span.className = 'badge badge-pill-custom p-2 ' +
+                (type === 'resume' ? 'badge-tertiary-soft' : 'badge-primary-soft');
+            span.textContent = skill;
+            container.appendChild(span);
+        });
+    }
+
+    function renderChips(containerId, items, type) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        if (!Array.isArray(items) || !items.length) {
+            const empty = document.createElement('span');
+            empty.className = 'small text-muted';
+            empty.textContent = type === 'matched'
+                ? 'No matched skills returned.'
+                : 'No missing JD skills — great match!';
+            container.appendChild(empty);
+            return;
+        }
+
+        items.forEach(function (item) {
+            const span = document.createElement('span');
+            span.className = 'badge badge-pill-custom ' +
+                (type === 'matched' ? 'badge-tertiary-soft' : 'badge-error-soft') +
+                ' p-2';
+            span.textContent = (type === 'matched' ? '✓ ' : '✕ ') + item;
+            container.appendChild(span);
+        });
+    }
+
+    function recommendationForSkill(skill) {
+        const map = {
+            Python: 'Strengthen Python with an advanced project and demonstrate measurable impact in your resume.',
+            SQL: 'Practice complex SQL queries and add a project that demonstrates joins, aggregation, and optimization.',
+            Docker: 'Containerize one of your projects with Docker and document the setup and deployment workflow.',
+            AWS: 'Deploy a personal project on AWS and mention the specific AWS services and measurable outcome.',
+            React: 'Build a multi-page React project with state management and deploy it as a portfolio project.',
+            Git: 'Demonstrate Git branching, merging, pull requests, and collaborative workflow through a project.',
+            'Machine Learning': 'Build an end-to-end machine learning project and explain the model, evaluation, and business impact.',
+            'System Design': 'Practice designing scalable services such as a URL shortener or chat application and document the architecture.',
+            Django: 'Build a Django backend with authentication, database integration, REST APIs, and deployment.',
+            'REST APIs': 'Build and document REST APIs with authentication, validation, error handling, and clear endpoint design.'
+        };
+        return map[skill] || 'Build a small project using ' + skill + ' and add measurable impact to your resume.';
+    }
+
+    function renderRecommendations(missing) {
+        const container = document.getElementById('recommendationsContainer');
+        container.innerHTML = '';
+
+        if (!Array.isArray(missing) || !missing.length) {
+            container.innerHTML = '<p class="small text-success mb-0">Excellent match. No major missing target skills were returned.</p>';
+            return;
+        }
+
+        missing.forEach(function (skill, index) {
+            const item = document.createElement('div');
+            item.className = 'd-flex align-items-start mb-3';
+            item.innerHTML =
+                '<span class="material-symbols-outlined text-primary-custom mr-2" style="font-size:18px;">arrow_right</span>' +
+                '<div><strong class="small">' +
+                (index < 2 ? 'High Priority: ' : '') +
+                skill +
+                '</strong><p class="small text-muted mb-0 mt-1">' +
+                recommendationForSkill(skill) +
+                '</p></div>';
+            container.appendChild(item);
+        });
+    }
+
+    window.apiGet('/api/jd-results/latest').then(function (data) {
+        if (!data || !data.comparison) {
+            throw new Error('No comparison found.');
+        }
+
+        const c = data.comparison;
+        const resumeSkills = Array.isArray(c.resume_skills) ? c.resume_skills : [];
+        const jdSkills = Array.isArray(c.jd_skills) ? c.jd_skills : [];
+        const matched = Array.isArray(c.matched_skills) ? c.matched_skills : [];
+        const missing = Array.isArray(c.missing_skills) ? c.missing_skills : [];
+
+        document.getElementById('resJdTitle').textContent = valueOrDash(c.job_title);
+        document.getElementById('resResumeName').textContent = valueOrDash(c.resume_name);
+        document.getElementById('resOverallScore').textContent =
+            scoreText(c.match_score) +
+            (c.match_score !== undefined && c.match_score !== null ? ' Match' : '');
+        document.getElementById('resComparedAt').textContent =
+            c.compared_at ? 'Compared: ' + c.compared_at : '';
+        document.getElementById('resSourceBadge').textContent =
+            c.jd_source || 'JD Comparison';
+
+        renderSkillChips(
+            'resResumeSkillsContainer',
+            'resResumeSkillsCount',
+            resumeSkills,
+            'resume'
+        );
+
+        renderSkillChips(
+            'resJdSkillsContainer',
+            'resJdSkillsCount',
+            jdSkills,
+            'jd'
+        );
+
+        document.getElementById('resMatchedCount').textContent = matched.length;
+        document.getElementById('resMissingCount').textContent = missing.length;
+
+        renderChips('resMatchedContainer', matched, 'matched');
+        renderChips('resMissingContainer', missing, 'missing');
+        renderRecommendations(missing);
+
+        loading.classList.add('d-none');
+        content.classList.remove('d-none');
+    }).catch(function (err) {
+        loading.classList.add('d-none');
+        error.classList.remove('d-none');
+
+        if (window.showToast) {
+            window.showToast(
+                'Could not load results',
+                err.message,
+                'error'
+            );
+        }
+    });
+});
+</script>
+{% endblock %}

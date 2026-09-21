@@ -1,0 +1,1038 @@
+{% extends "base.html" %}
+
+{% block title %}
+Resume Analysis - CareerAI Intelligence
+{% endblock %}
+
+{% block content %}
+
+<header class="navbar-glass py-3 px-3 px-md-4 sticky-top">
+    <div class="d-flex align-items-center justify-content-between">
+
+        <div class="d-flex align-items-center">
+
+            <button
+                class="btn btn-sm btn-light d-lg-none mr-3 border-custom"
+                type="button"
+                id="mobileNavToggler">
+                <span class="material-symbols-outlined">
+                    menu
+                </span>
+            </button>
+
+            <div>
+                <h5 class="mb-0 font-weight-bold">
+                    Resume Analysis
+                </h5>
+
+                <small class="text-muted d-none d-sm-inline">
+                    Here's what AI found in your resume
+                </small>
+            </div>
+
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <a
+                href="{{ url_for('main.ai_suggestions') }}"
+                class="btn btn-sm btn-careerai-primary">
+
+                <span
+                    class="material-symbols-outlined mr-1"
+                    style="font-size: 16px;">
+                    auto_awesome
+                </span>
+
+                AI Suggestions
+            </a>
+
+        </div>
+
+    </div>
+</header>
+
+<main class="p-3 p-md-4 p-lg-5">
+
+    <div class="main-content-container">
+
+        <!-- =====================================================
+             RESUME INFORMATION
+        ====================================================== -->
+
+        <div class="card-elevation-1 p-4 mb-4">
+
+            <div class="row align-items-center gy-3">
+
+                <div class="col-md-8">
+
+                    <div class="d-flex align-items-center mb-2">
+
+                        <span
+                            class="badge
+                                   badge-pill-custom
+                                   badge-primary-soft
+                                   mr-2">
+                            Parsed Document
+                        </span>
+
+                        <span
+                            class="text-muted small"
+                            id="anaUploadDate">
+                            Uploaded: --
+                        </span>
+
+                    </div>
+
+                    <h3
+                        class="h4
+                            font-weight-bold
+                            text-on-surface
+                            mb-1"
+                        id="anaCandidateName">
+
+                        Loading...
+
+                    </h3>
+
+                    <p
+                        class="text-muted mb-0"
+                        id="anaCandidateTitle">
+
+                        Resume Analysis
+
+                    </p>
+
+                </div>
+
+                <!-- =================================================
+                     OVERALL SCORE
+                ================================================== -->
+
+                <div class="col-md-4 text-md-right">
+
+                    <div
+                        class="d-inline-flex
+                               align-items-center
+                               p-3
+                               bg-surface-low
+                               rounded-lg
+                               border-custom">
+
+                        <div class="text-left mr-3">
+
+                            <span
+                                class="small
+                                       font-weight-bold
+                                       text-muted
+                                       d-block">
+                                Overall Score
+                            </span>
+
+                            <strong
+                                class="h4
+                                       font-weight-bold
+                                       text-success
+                                       mb-0"
+                                id="anaOverallScore">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <span
+                            class="material-symbols-outlined text-success"
+                            style="font-size: 36px;">
+                            verified
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             METRIC CARDS
+        ====================================================== -->
+
+        <div class="row mb-4 gy-4 text-center">
+
+            <!-- ATS Format -->
+
+            <div
+                class="col-xl-3
+                       col-lg-3
+                       col-md-6
+                       col-sm-6
+                       mb-3
+                       mb-xl-0">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100
+                           d-flex
+                           flex-column
+                           justify-content-between
+                           align-items-center">
+
+                    <span
+                        class="small
+                               font-weight-bold
+                               text-muted
+                               uppercase
+                               tracking-wider
+                               mb-2">
+                        ATS Format
+                    </span>
+
+                    <div
+                        class="display-4
+                               font-weight-bold
+                               text-tertiary-custom
+                               my-2"
+                        id="anaAtsFormatScore">
+                        --
+                    </div>
+
+                    <span
+                        class="badge badge-tertiary-pass"
+                        id="anaAtsFormatBadge">
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Skill Extraction -->
+
+            <div
+                class="col-xl-3
+                       col-lg-3
+                       col-md-6
+                       col-sm-6
+                       mb-3
+                       mb-xl-0">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100
+                           d-flex
+                           flex-column
+                           justify-content-between
+                           align-items-center">
+
+                    <span
+                        class="small
+                               font-weight-bold
+                               text-muted
+                               uppercase
+                               tracking-wider
+                               mb-2">
+                        Skill Extraction
+                    </span>
+
+                    <div
+                        class="display-4
+                               font-weight-bold
+                               text-primary-custom
+                               my-2"
+                        id="anaSkillExtractionScore">
+                        --
+                    </div>
+
+                    <span
+                        class="badge badge-primary-good"
+                        id="anaSkillExtractionBadge">
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Impact -->
+
+            <div
+                class="col-xl-3
+                       col-lg-3
+                       col-md-6
+                       col-sm-6
+                       mb-3
+                       mb-xl-0">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100
+                           d-flex
+                           flex-column
+                           justify-content-between
+                           align-items-center">
+
+                    <span
+                        class="small
+                               font-weight-bold
+                               text-muted
+                               uppercase
+                               tracking-wider
+                               mb-2">
+                        Impact
+                    </span>
+
+                    <div
+                        class="display-4
+                               font-weight-bold
+                               text-danger
+                               my-2"
+                        id="anaImpactScore">
+                        --
+                    </div>
+
+                    <span
+                        class="badge badge-error-improve"
+                        id="anaImpactBadge">
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Keywords -->
+
+            <div
+                class="col-xl-3
+                       col-lg-3
+                       col-md-6
+                       col-sm-6
+                       mb-3
+                       mb-xl-0">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100
+                           d-flex
+                           flex-column
+                           justify-content-between
+                           align-items-center">
+
+                    <span
+                        class="small
+                               font-weight-bold
+                               text-muted
+                               uppercase
+                               tracking-wider
+                               mb-2">
+                        Keywords
+                    </span>
+
+                    <div
+                        class="display-4
+                               font-weight-bold
+                               text-primary-custom
+                               my-2"
+                        id="anaKeywordsScore">
+                        --
+                    </div>
+
+                    <span
+                        class="badge badge-primary-good"
+                        id="anaKeywordsBadge">
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             STRENGTHS VS IMPROVEMENTS
+        ====================================================== -->
+
+        <div class="row gy-4 mb-4">
+
+            <!-- Strengths -->
+
+            <div
+                class="col-md-6
+                       mb-4
+                       mb-md-0">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100"
+                    style="border-top: 4px solid var(--color-tertiary-container);">
+
+                    <h5
+                        class="h6
+                               font-weight-bold
+                               text-success
+                               mb-3
+                               d-flex
+                               align-items-center">
+
+                        <span class="material-symbols-outlined mr-2">
+                            thumb_up
+                        </span>
+
+                        Top Strengths
+
+                    </h5>
+
+                    <ul
+                        class="list-unstyled
+                               pl-0
+                               mb-0
+                               small
+                               text-dark"
+                        id="anaStrengthsList">
+
+                        <li class="small text-muted">
+                            Loading analysis...
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Improvements -->
+
+            <div class="col-md-6">
+
+                <div
+                    class="card-elevation-1
+                           p-4
+                           h-100"
+                    style="border-top: 4px solid var(--color-error);">
+
+                    <h5
+                        class="h6
+                               font-weight-bold
+                               text-danger
+                               mb-3
+                               d-flex
+                               align-items-center">
+
+                        <span class="material-symbols-outlined mr-2">
+                            build
+                        </span>
+
+                        Areas for Improvement
+
+                    </h5>
+
+                    <ul
+                        class="list-unstyled
+                               pl-0
+                               mb-0
+                               small
+                               text-dark"
+                        id="anaImprovementsList">
+
+                        <li class="small text-muted">
+                            Loading analysis...
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             EXTRACTED SKILLS
+        ====================================================== -->
+
+        <div class="card-elevation-1 p-4 mb-4">
+
+            <h5
+                class="h6
+                       font-weight-bold
+                       text-on-surface
+                       mb-3
+                       d-flex
+                       align-items-center">
+
+                <span
+                    class="material-symbols-outlined
+                           text-primary-custom
+                           mr-2">
+                    code
+                </span>
+
+                Extracted Skills Inventory
+
+            </h5>
+
+            <div
+                class="row gy-3"
+                id="anaSkillsCategoriesRow">
+
+                <div class="col-12">
+
+                    <span class="small text-muted">
+                        Loading skills...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CTA
+        ====================================================== -->
+
+        <div
+            class="card-elevation-2
+                   p-4
+                   p-md-5
+                   text-center
+                   bg-surface-low
+                   rounded-xl">
+
+            <h4
+                class="h5
+                       font-weight-bold
+                       text-on-surface
+                       mb-2">
+
+                Ready to Upgrade Your Resume Impact?
+
+            </h4>
+
+            <p
+                class="small
+                       text-muted
+                       mb-4
+                       mx-auto"
+                style="max-width: 520px;">
+
+                Use our AI Skill Gap tool or Bullet Enhancer
+                to boost your ATS match score above 90%.
+
+            </p>
+
+            <div
+                class="d-flex
+                       flex-column
+                       flex-sm-row
+                       justify-content-center
+                       align-items-center
+                       gap-3">
+
+                <a
+                    href="{{ url_for('main.skill_gap') }}"
+                    class="btn
+                           btn-careerai-primary
+                           btn-sm
+                           px-4
+                           py-2
+                           font-weight-bold">
+
+                    Skill Gap Analysis &rarr;
+
+                </a>
+
+                <a
+                    href="{{ url_for('main.ai_suggestions') }}"
+                    class="btn
+                           btn-careerai-secondary
+                           btn-sm
+                           px-4
+                           py-2
+                           font-weight-bold">
+
+                    AI Bullet Enhancer &rarr;
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function badgeVariantForScore(score) {
+
+    if (score >= 80) {
+        return {
+            cls: 'badge-tertiary-pass',
+            label: 'PASS'
+        };
+    }
+
+    if (score >= 60) {
+        return {
+            cls: 'badge-primary-good',
+            label: 'GOOD'
+        };
+    }
+
+    return {
+        cls: 'badge-error-improve',
+        label: 'IMPROVE'
+    };
+}
+
+
+function setMetric(scoreId, badgeId, score) {
+
+    const scoreElement =
+        document.getElementById(scoreId);
+
+    const badgeElement =
+        document.getElementById(badgeId);
+
+    if (scoreElement) {
+        scoreElement.textContent =
+            score + '%';
+    }
+
+    if (badgeElement) {
+
+        const variant =
+            badgeVariantForScore(score);
+
+        badgeElement.className =
+            'badge ' + variant.cls;
+
+        badgeElement.textContent =
+            variant.label;
+    }
+}
+
+
+function renderList(
+    listId,
+    items,
+    iconName,
+    iconColorClass
+) {
+
+    const list =
+        document.getElementById(listId);
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = '';
+
+    if (!items || items.length === 0) {
+
+        list.innerHTML =
+            '<li class="small text-muted">' +
+            'Nothing to report yet.' +
+            '</li>';
+
+        return;
+    }
+
+    items.forEach(function (text) {
+
+        const li =
+            document.createElement('li');
+
+        li.className =
+            'mb-2.5 d-flex align-items-center';
+
+        const icon =
+            document.createElement('span');
+
+        icon.className =
+            'material-symbols-outlined ' +
+            iconColorClass +
+            ' mr-2';
+
+        icon.style.fontSize = '18px';
+        icon.style.lineHeight = '1';
+        icon.style.flexShrink = '0';
+
+        icon.textContent =
+            iconName;
+
+        const content =
+            document.createElement('span');
+
+        content.textContent =
+            text;
+
+        li.appendChild(icon);
+        li.appendChild(content);
+
+        list.appendChild(li);
+    });
+}
+
+
+function renderSkillCategories(
+    skillsByCategory
+) {
+
+    const row =
+        document.getElementById(
+            'anaSkillsCategoriesRow'
+        );
+
+    if (!row) {
+        return;
+    }
+
+    row.innerHTML = '';
+
+    const categories =
+        Object.keys(
+            skillsByCategory || {}
+        );
+
+    if (categories.length === 0) {
+
+        row.innerHTML =
+            '<div class="col-12">' +
+            '<span class="small text-muted">' +
+            'No recognized skills found in this resume.' +
+            '</span>' +
+            '</div>';
+
+        return;
+    }
+
+    categories.forEach(function (category) {
+
+        const col =
+            document.createElement('div');
+
+        col.className =
+            'col-xl-3 ' +
+            'col-lg-3 ' +
+            'col-md-6 ' +
+            'col-sm-6 mb-3';
+
+        const card =
+            document.createElement('div');
+
+        card.className =
+            'p-3 ' +
+            'bg-surface-low ' +
+            'rounded-lg ' +
+            'border-custom ' +
+            'h-100 ' +
+            'd-flex ' +
+            'flex-column';
+
+        const title =
+            document.createElement('span');
+
+        title.className =
+            'small ' +
+            'font-weight-bold ' +
+            'text-primary-custom ' +
+            'uppercase ' +
+            'tracking-wider ' +
+            'd-block ' +
+            'mb-3';
+
+        title.textContent =
+            category;
+
+        const chips =
+            document.createElement('div');
+
+        chips.className =
+            'skills-chip-container mt-auto';
+
+        const skills =
+            Array.isArray(
+                skillsByCategory[category]
+            )
+                ? skillsByCategory[category]
+                : [];
+
+        skills.forEach(function (skill) {
+
+            const chip =
+                document.createElement('span');
+
+            chip.className =
+                'badge ' +
+                'badge-pill-custom ' +
+                'badge-primary-soft';
+
+            chip.textContent =
+                skill;
+
+            chips.appendChild(chip);
+        });
+
+        card.appendChild(title);
+        card.appendChild(chips);
+
+        col.appendChild(card);
+
+        row.appendChild(col);
+    });
+}
+
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        window.apiGet('/api/resume/latest')
+            .then(function (data) {
+
+                if (
+                    !data ||
+                    !data.resume
+                ) {
+
+                    if (window.showToast) {
+
+                        window.showToast(
+                            'No Resume Yet',
+                            'Upload a resume first to see its analysis.',
+                            'info'
+                        );
+                    }
+
+                    return;
+                }
+
+                const resume =
+                    data.resume;
+
+
+                /*
+                 * Candidate name extracted from
+                 * the uploaded resume itself.
+                 */
+
+                const candidateName =
+                    document.getElementById(
+                        'anaCandidateName'
+                    );
+
+                if (candidateName) {
+
+                    candidateName.textContent =
+                        resume.candidate_name ||
+                        'Candidate Name Not Found';
+                }
+
+
+                /*
+                 * Upload date
+                 */
+
+                const uploadDate =
+                    document.getElementById(
+                        'anaUploadDate'
+                    );
+
+                if (
+                    uploadDate &&
+                    resume.uploaded_at
+                ) {
+
+                    uploadDate.textContent =
+                        'Uploaded: ' +
+                        resume.uploaded_at.slice(
+                            0,
+                            10
+                        );
+                }
+
+
+                /*
+                 * Candidate title / education
+                 */
+
+                const candidateTitle =
+                    document.getElementById(
+                        'anaCandidateTitle'
+                    );
+
+                if (
+                    candidateTitle &&
+                    resume.education &&
+                    resume.education.length > 0
+                ) {
+
+                    candidateTitle.textContent =
+                        resume.education[0];
+
+                } else if (candidateTitle) {
+
+                    candidateTitle.textContent =
+                        'Resume Analysis';
+                }
+
+
+                /*
+                 * Stop here if the resume has
+                 * not been analyzed.
+                 */
+
+                if (!resume.analyzed) {
+
+                    if (window.showToast) {
+
+                        window.showToast(
+                            'Resume Uploaded',
+                            'Resume analysis is not available yet.',
+                            'info'
+                        );
+                    }
+
+                    return;
+                }
+
+
+                /*
+                 * Overall score
+                 */
+
+                const overallScore =
+                    document.getElementById(
+                        'anaOverallScore'
+                    );
+
+                if (overallScore) {
+
+                    overallScore.textContent =
+                        resume.overall_score +
+                        ' / 100';
+                }
+
+
+                /*
+                 * Sub scores
+                 */
+
+                const sub =
+                    resume.sub_scores || {};
+
+
+                setMetric(
+                    'anaAtsFormatScore',
+                    'anaAtsFormatBadge',
+                    Number(
+                        sub.ats_format || 0
+                    )
+                );
+
+
+                setMetric(
+                    'anaSkillExtractionScore',
+                    'anaSkillExtractionBadge',
+                    Number(
+                        sub.skill_extraction || 0
+                    )
+                );
+
+
+                setMetric(
+                    'anaImpactScore',
+                    'anaImpactBadge',
+                    Number(
+                        sub.impact || 0
+                    )
+                );
+
+
+                setMetric(
+                    'anaKeywordsScore',
+                    'anaKeywordsBadge',
+                    Number(
+                        sub.keywords || 0
+                    )
+                );
+
+
+                /*
+                 * Strengths
+                 */
+
+                renderList(
+                    'anaStrengthsList',
+                    resume.strengths,
+                    'check',
+                    'text-success'
+                );
+
+
+                /*
+                 * Improvements
+                 */
+
+                renderList(
+                    'anaImprovementsList',
+                    resume.improvements,
+                    'close',
+                    'text-danger'
+                );
+
+
+                /*
+                 * Skills
+                 */
+
+                renderSkillCategories(
+                    resume.skills_by_category
+                );
+
+            })
+            .catch(function (err) {
+
+                if (window.showToast) {
+
+                    window.showToast(
+                        'Could not load analysis',
+                        err.message ||
+                        'Unable to load resume analysis.',
+                        'error'
+                    );
+                }
+
+            });
+
+    }
+);
+
+</script>
+
+{% endblock %}

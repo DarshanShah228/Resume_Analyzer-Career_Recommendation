@@ -1,0 +1,42 @@
+{
+  "python-dev": {
+    "title": "Python Developer",
+    "required_skills": ["Python", "Django", "Flask", "SQL", "REST APIs", "Git", "OOP", "Data Structures"]
+  },
+  "backend-dev": {
+    "title": "Backend Software Engineer",
+    "required_skills": ["Python", "Java", "SQL", "REST APIs", "Microservices", "Docker", "System Design", "Git", "PostgreSQL"]
+  },
+  "frontend-dev": {
+    "title": "Frontend Developer",
+    "required_skills": ["JavaScript", "HTML5", "CSS3", "React", "TypeScript", "Bootstrap", "Git", "REST APIs"]
+  },
+  "fullstack-dev": {
+    "title": "Full Stack Developer",
+    "required_skills": ["JavaScript", "React", "Node.js", "Python", "SQL", "MongoDB", "REST APIs", "Git", "HTML5", "CSS3"]
+  },
+  "data-analyst": {
+    "title": "Data Analyst",
+    "required_skills": ["Python", "SQL", "Data Analysis", "Data Visualization", "Excel", "Power BI", "Tableau", "Statistics"]
+  },
+  "data-scientist": {
+    "title": "Data Scientist",
+    "required_skills": ["Python", "Machine Learning", "Pandas", "NumPy", "Scikit-learn", "Statistics", "SQL", "Data Visualization", "Deep Learning"]
+  },
+  "ml-engineer": {
+    "title": "Machine Learning Engineer",
+    "required_skills": ["Python", "Machine Learning", "Deep Learning", "TensorFlow", "PyTorch", "NLP", "SQL", "Docker", "AWS"]
+  },
+  "devops-engineer": {
+    "title": "DevOps Engineer",
+    "required_skills": ["Linux", "Docker", "Kubernetes", "AWS", "CI/CD", "Jenkins", "Terraform", "Git", "Ansible"]
+  },
+  "java-dev": {
+    "title": "Java Developer",
+    "required_skills": ["Java", "Spring Boot", "SQL", "REST APIs", "OOP", "Git", "Data Structures", "Algorithms"]
+  },
+  "mobile-dev": {
+    "title": "Mobile App Developer",
+    "required_skills": ["Kotlin", "Swift", "Java", "Flutter", "React", "REST APIs", "Git", "Firebase"]
+  }
+}

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        CareerAI
+        {% endblock %}
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet">
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- CareerAI CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/styles.css') }}">
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+    <div class="app-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- ==================================================
+         SIDEBAR NAVIGATION
+    =================================================== -->
+
+    <aside class="app-sidebar" id="appSidebar">
+
+        <!-- Logo -->
+
+        <div class="d-flex align-items-center mb-4 px-2">
+
+            <span class="material-symbols-outlined
+                         text-primary-custom
+                         mr-2
+                         fill-1"
+                  style="font-size: 32px;">
+
+                auto_awesome
+
+            </span>
+
+            <span class="h4 mb-0
+                         font-weight-extrabold
+                         text-on-surface">
+
+                CareerAI
+
+            </span>
+
+        </div>
+
+
+        <!-- Main Navigation -->
+
+        <a href="{{ url_for('main.home') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.home' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                home
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.dashboard') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                dashboard
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.upload_resume') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.upload_resume' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                upload_file
+            </span>
+
+            <span>
+                Upload Resume
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.resume_analysis') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.resume_analysis' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                analytics
+            </span>
+
+            <span>
+                Resume Analysis
+            </span>
+
+        </a>
+
+
+        <!-- Career Tools -->
+
+        <div class="sidebar-section-title">
+            Career Tools
+        </div>
+
+
+        <a href="{{ url_for('main.skill_gap') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.skill_gap' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                troubleshoot
+            </span>
+
+            <span>
+                Skill Gap Analysis
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.compare_jd') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.compare_jd' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                compare_arrows
+            </span>
+
+            <span>
+                Compare with JD
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.ai_suggestions') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.ai_suggestions' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                auto_awesome
+            </span>
+
+            <span>
+                AI Suggestions
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.about') }}"
+           class="sidebar-nav-item
+           {% if request.endpoint == 'main.about' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                info
+            </span>
+
+            <span>
+                About Project
+            </span>
+
+        </a>
+
+    </aside>
+
+
+    <!-- ==================================================
+         MAIN APPLICATION AREA
+    =================================================== -->
+
+    <div class="app-main-content">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+
+    <!-- ==================================================
+         MOBILE BOTTOM NAVIGATION
+    =================================================== -->
+
+    <nav class="mobile-bottom-nav">
+
+        <a href="{{ url_for('main.dashboard') }}"
+           class="nav-item-link
+           {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                dashboard
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.upload_resume') }}"
+           class="nav-item-link
+           {% if request.endpoint == 'main.upload_resume' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                upload_file
+            </span>
+
+            <span>
+                Upload
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.skill_gap') }}"
+           class="nav-item-link
+           {% if request.endpoint == 'main.skill_gap' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                troubleshoot
+            </span>
+
+            <span>
+                Skill Gap
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.compare_jd') }}"
+           class="nav-item-link
+           {% if request.endpoint == 'main.compare_jd' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                compare_arrows
+            </span>
+
+            <span>
+                Compare JD
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('main.about') }}"
+           class="nav-item-link
+           {% if request.endpoint == 'main.about' %}active{% endif %}">
+
+            <span class="material-symbols-outlined">
+                info
+            </span>
+
+            <span>
+                About
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- JavaScript -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}">
+    </script>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}">
+    </script>
+
+    <script src="{{ url_for('static', filename='js/analyzer.js') }}">
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('appSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const toggler = document.getElementById('mobileNavToggler');
+
+            function closeSidebar() {
+                if (sidebar) sidebar.classList.remove('mobile-open');
+                if (backdrop) backdrop.classList.remove('visible');
+            }
+
+            if (toggler && sidebar && backdrop) {
+                toggler.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('mobile-open');
+                    backdrop.classList.toggle('visible');
+                });
+
+                backdrop.addEventListener('click', closeSidebar);
+
+                const navItems = sidebar.querySelectorAll('.sidebar-nav-item');
+                navItems.forEach(function (item) {
+                    item.addEventListener('click', closeSidebar);
+                });
+            }
+        });
+    </script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+
+</html>
