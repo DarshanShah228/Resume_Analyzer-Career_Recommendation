@@ -43,13 +43,11 @@
 
 <body>
 
-    <div class="app-sidebar-backdrop" id="sidebarBackdrop"></div>
-
     <!-- ==================================================
-         SIDEBAR NAVIGATION
+         DESKTOP SIDEBAR
     =================================================== -->
 
-    <aside class="app-sidebar" id="appSidebar">
+    <aside class="app-sidebar">
 
         <!-- Logo -->
 
@@ -203,7 +201,60 @@
             </span>
 
         </a>
+        <!-- User Profile & Logout Section at Bottom of Sidebar -->
+        {% if current_user.is_authenticated %}
+        <div class="sidebar-user-footer mt-auto pt-3 border-top border-subtle">
+            <div class="dropdown dropup">
+                <button class="btn btn-block p-2 d-flex align-items-center justify-content-between text-left rounded-lg bg-surface-low border-0 text-dark"
+                        type="button"
+                        id="sidebarUserDropdown"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        style="transition: background-color 0.2s ease;">
+                    <div class="d-flex align-items-center overflow-hidden" style="min-width: 0; gap: 0.5rem;">
+                        <div class="rounded-circle bg-primary-custom text-white font-weight-bold d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width: 34px; height: 34px; font-size: 0.85rem;">
+                            {{ current_user.name[0]|upper }}
+                        </div>
+                        <div class="overflow-hidden" style="line-height: 1.2;">
+                            <span class="d-block font-weight-bold text-truncate text-dark small">{{ current_user.name }}</span>
+                            <small class="text-muted text-truncate d-block" style="font-size: 0.72rem;">{{ current_user.email }}</small>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-muted flex-shrink-0" style="font-size: 20px;">
+                        unfold_more
+                    </span>
+                </button>
 
+                <div class="dropdown-menu dropdown-menu-right w-100 shadow-sm border-custom py-2" aria-labelledby="sidebarUserDropdown">
+                    <div class="px-3 py-2 border-bottom border-subtle mb-1">
+                        <span class="small font-weight-bold d-block text-dark">{{ current_user.name }}</span>
+                        <small class="text-muted d-block">{{ current_user.email }}</small>
+                    </div>
+
+                    {% if current_user.role == 'admin' %}
+                    <a class="dropdown-item small d-flex align-items-center py-2 text-primary font-weight-bold" href="{{ url_for('main.admin') }}">
+                        <span class="material-symbols-outlined mr-2" style="font-size: 18px;">admin_panel_settings</span>
+                        Admin Panel
+                    </a>
+                    {% endif %}
+
+                    <a class="dropdown-item small d-flex align-items-center py-2" href="{{ url_for('main.about') }}">
+                        <span class="material-symbols-outlined text-muted mr-2" style="font-size: 18px;">person</span>
+                        Profile & Details
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item small d-flex align-items-center py-2 text-danger font-weight-bold" href="{{ url_for('main.logout') }}">
+                        <span class="material-symbols-outlined text-danger mr-2" style="font-size: 18px;">logout</span>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </aside>
 
 
@@ -317,34 +368,6 @@
     </script>
 
     <script src="{{ url_for('static', filename='js/analyzer.js') }}">
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebar = document.getElementById('appSidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            const toggler = document.getElementById('mobileNavToggler');
-
-            function closeSidebar() {
-                if (sidebar) sidebar.classList.remove('mobile-open');
-                if (backdrop) backdrop.classList.remove('visible');
-            }
-
-            if (toggler && sidebar && backdrop) {
-                toggler.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    sidebar.classList.toggle('mobile-open');
-                    backdrop.classList.toggle('visible');
-                });
-
-                backdrop.addEventListener('click', closeSidebar);
-
-                const navItems = sidebar.querySelectorAll('.sidebar-nav-item');
-                navItems.forEach(function (item) {
-                    item.addEventListener('click', closeSidebar);
-                });
-            }
-        });
     </script>
 
     {% block scripts %}
