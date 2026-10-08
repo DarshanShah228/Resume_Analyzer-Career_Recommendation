@@ -35,6 +35,20 @@ Resume Analysis - CareerAI Intelligence
         <div class="d-flex align-items-center gap-2">
 
             <a
+                href="{{ url_for('main.download_resume_report') }}"
+                class="btn btn-sm btn-careerai-primary"
+                id="downloadReportBtn">
+
+                <span
+                    class="material-symbols-outlined mr-1"
+                    style="font-size: 16px;">
+                    download
+                </span>
+
+                Download Report
+            </a>
+            &nbsp;&nbsp;
+            <a
                 href="{{ url_for('main.ai_suggestions') }}"
                 class="btn btn-sm btn-careerai-primary">
 
@@ -542,7 +556,7 @@ Resume Analysis - CareerAI Intelligence
                        flex-sm-row
                        justify-content-center
                        align-items-center
-                       gap-3">
+                       hero-actions">
 
                 <a
                     href="{{ url_for('main.skill_gap') }}"
@@ -556,11 +570,11 @@ Resume Analysis - CareerAI Intelligence
                     Skill Gap Analysis &rarr;
 
                 </a>
-
+                &nbsp;&nbsp;
                 <a
                     href="{{ url_for('main.ai_suggestions') }}"
                     class="btn
-                           btn-careerai-secondary
+                           btn-careerai-primary
                            btn-sm
                            px-4
                            py-2

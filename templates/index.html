@@ -9,7 +9,7 @@
                 <h1 class="h4 fw-bold mb-1">Career Dashboard</h1>
                 <p class="text-muted small mb-0">Your resume, skills, job matches, and next career actions.</p>
             </div>
-            <a href="{{ url_for('main.about') }}" class="btn btn-outline-primary rounded-pill px-4">About CareerAI</a>
+            <a href="{{ url_for('main.about') }}" class="btn btn-careerai-primary rounded-pill px-4">About CareerAI</a>
         </div>
     </div>
 </header>
@@ -24,9 +24,9 @@
                     <p class="text-muted mb-0">Track your career readiness and focus on the improvements that matter most.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-2">
-                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary">Analyze Resume →</a>
-                        <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-secondary">Compare JD</a>
+                    <div class="d-flex flex-column flex-sm-row justify-content-lg-end hero-actions">
+                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary btn-cta-glow">Analyze Resume <span class="cta-arrow">&rarr;</span></a>&nbsp;&nbsp;
+                        <a href="{{ url_for('main.compare_jd') }}" class="btn btn-careerai-primary">Compare JD</a>
                     </div>
                 </div>
             </div>
@@ -106,9 +106,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex flex-wrap gap-2 mt-4">
-                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary">Upload / Replace Resume</a>
-                        <a href="{{ url_for('main.resume_analysis') }}" class="btn btn-outline-primary">View Analysis</a>
+                    <div class="d-flex flex-wrap hero-actions mt-4">
+                        <a href="{{ url_for('main.upload_resume') }}" class="btn btn-careerai-primary">Upload / Replace Resume</a>&nbsp;&nbsp;
+                        <a href="{{ url_for('main.resume_analysis') }}" class="btn btn-careerai-primary">View Analysis</a>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{ url_for('main.skill_gap') }}" class="btn btn-outline-primary w-100">View Skill Gap →</a>
+                    <a href="{{ url_for('main.skill_gap') }}" class="btn btn-careerai-primary w-100">View Skill Gap →</a>
                 </div>
             </div>
         </section>
@@ -184,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ url_for('main.jd_results') }}" class="btn btn-outline-primary">View Comparison Results →</a>
+                        <a href="{{ url_for('main.jd_results') }}" class="btn btn-careerai-primary">View Comparison Results →</a>
                     </div>
                 </div>
             </div>
