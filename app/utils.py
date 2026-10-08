@@ -14,9 +14,7 @@ from flask import current_app
 from werkzeug.utils import secure_filename
 
 
-# =============================================================
 # FILE VALIDATION & SAVING
-# =============================================================
 
 def allowed_file(filename):
     """Check the uploaded file has an allowed resume extension."""

@@ -1269,4 +1269,3 @@ def admin_dashboard_api():
         "recent_activity": activities[:10],
         "user_growth": growth_rows,
     })
-
