@@ -353,6 +353,91 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-1px);
 }
 
+<<<<<<< HEAD
+=======
+/* Dashboard hero CTA buttons (index.html welcome card) */
+.hero-actions {
+  gap: 0.9rem;
+}
+
+.btn-cta-glow {
+  animation: cta-glow 2.2s ease-in-out infinite;
+}
+
+.btn-cta-glow:hover {
+  animation: none;
+}
+
+@keyframes cta-glow {
+  0%, 100% { box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); transform: translateY(0); }
+  50% { box-shadow: 0 6px 22px rgba(79, 70, 229, 0.55); transform: translateY(-2px); }
+}
+
+.btn-cta-glow .cta-arrow {
+  display: inline-block;
+  animation: cta-nudge 1.6s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.btn-cta-glow:hover .cta-arrow {
+  animation: none;
+  transform: translateX(6px);
+}
+
+@keyframes cta-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.btn-cta-blue {
+  background-color: rgba(53, 37, 205, 0.08);
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  white-space: nowrap;
+}
+
+.btn-cta-blue:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-cta-glow,
+  .btn-cta-glow .cta-arrow {
+    animation: none;
+  }
+}
+
+/* Recommended Next Steps list (dashboard.html) */
+.next-step-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.6rem;
+  margin-bottom: 0.35rem;
+  border-radius: 10px;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.next-step-item:hover {
+  background-color: rgba(53, 37, 205, 0.06);
+  text-decoration: none;
+}
+
+.next-step-item > span:last-child {
+  transition: transform 0.15s ease;
+}
+
+.next-step-item:hover > span:last-child {
+  transform: translateX(3px);
+}
+
+>>>>>>> f42b2a2 (chore: add .gitignore and stop tracking venv, cache, and DB files)
 /* Layout Drawer (Desktop Sidebar + Main Content) */
 /* =========================================
    DESKTOP SIDEBAR + MAIN CONTENT
